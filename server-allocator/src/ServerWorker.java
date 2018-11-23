@@ -8,10 +8,15 @@ public class ServerWorker implements Runnable {
     // instance of server to do login method
     private Server server;
 
-    public ServerWorker(Socket client, Server server) {
+    private BufferedWriter clientOut;
+    private BufferedReader clientIn;
+
+    public ServerWorker(Socket client, Server server) throws IOException {
 
         this.client = client;
         this.server = server;
+        this.clientIn = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        this.clientOut = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
 
     }
 
@@ -19,12 +24,12 @@ public class ServerWorker implements Runnable {
 
         try {
 
-            // read and write channels from client socket
-            BufferedReader clientIn = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            BufferedWriter clientOut = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
+            String responseFromClient;
+            while ((responseFromClient = clientIn.readLine()) != null ) {
 
-            // MÉTODO PRA TRATAR ESCOLHA DE MENU DO CLIENTE
-            // this.menuSelection(clientIn, clientOut);
+
+            }
+
 
         } catch (IOException ioex) {
 
@@ -37,5 +42,9 @@ public class ServerWorker implements Runnable {
     // fazer método para o login
 
     // fazer método para o registo
+
+    // fazer método para parse daquilo q vem do client
+
+    // fazer método para o write no client
 
 }
