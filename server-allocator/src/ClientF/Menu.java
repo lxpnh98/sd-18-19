@@ -2,11 +2,10 @@ package ClientF;
 
 import java.util.Scanner;
 
-import static com.sun.org.apache.xalan.internal.xsltc.compiler.Constants.RESET;
-import static java.awt.AlphaComposite.CLEAR;
-
 public class Menu {
 
+    private static final String RESET = "\u001B[0m";
+    private static final String CLEAR = "\u001b[2J\u001b[H";
     private int state;
 
     public void show() {
@@ -63,6 +62,11 @@ public class Menu {
     public int getState() {
 
         return this.state;
+    }
+
+    public void changeState(int newState) {
+
+        this.state = newState;
     }
 
 }

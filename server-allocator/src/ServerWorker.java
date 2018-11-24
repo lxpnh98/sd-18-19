@@ -41,7 +41,7 @@ public class ServerWorker implements Runnable {
 
     }
 
-    private void parseResponse (String responseFromClient) {
+    private void parseResponse (String responseFromClient) throws IOException {
 
         String[] data = responseFromClient.split(" ", 2);
 
@@ -51,16 +51,69 @@ public class ServerWorker implements Runnable {
 
                 System.out.println("Recebeu login");
 
-            case "SIGNUP":
+                // Dados do login estão em  data[1];
+                this.login(data[1]);
+
+                break;
+
+            case "REGISTER":
+
+                System.out.println("Recebeu registo");
+
+                // Dados do registo estão em  data[1];
+                this.register(data[1]);
+
+                break;
 
         }
 
 
     }
 
-    // fazer método para o login
+    private void sendMessage(String message) throws IOException {
 
-    // fazer método para o registo
+        clientOut.write(message);
+        clientOut.newLine();
+        clientOut.flush();
+    }
+
+    private void login(String dataLogin) throws IOException {
+
+        String[] data = dataLogin.split(" ");
+
+        String username = data[0];
+        String password = data[1];
+
+        if (data.length != 2) {
+
+            System.out.println("Dados inseridos incorretamente");
+            return;
+        }
+
+        this.server.login(username, password);
+
+        this.sendMessage("LOGINFEITO");
+
+    }
+
+    private void register(String dataRegister) throws IOException {
+
+        String[] data = dataRegister.split(" ");
+
+        String username = data[0];
+        String password = data[1];
+
+        if (data.length != 2) {
+
+            System.out.println("Dados inseridos incorretamente");
+            return;
+        }
+
+        this.server.register(username, password);
+
+        this.sendMessage("REGISTOFEITO");
+
+    }
 
 
 }

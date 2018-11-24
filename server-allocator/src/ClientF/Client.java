@@ -31,7 +31,9 @@ public class Client implements Runnable {
 
             }
         } catch (IOException e) {
+
             e.printStackTrace();
+
         }
     }
 
@@ -41,11 +43,23 @@ public class Client implements Runnable {
 
         switch (data[0]) {
 
-            case "LOGIN":
+            case "LOGINFEITO":
 
+                System.out.println("Login Feito");
 
-            case "SIGNUP":
+                this.menu.changeState(1);
+                this.menu.show();
 
+                break;
+
+            case "REGISTOFEITO":
+
+                System.out.println("Registo Feito");
+
+                this.menu.changeState(0);
+                this.menu.show();
+
+                break;
         }
 
     }
@@ -64,6 +78,8 @@ public class Client implements Runnable {
             // read and write channels from server socket
             inSv = new BufferedReader(new InputStreamReader(svSocket.getInputStream()));
             outSv = new BufferedWriter(new OutputStreamWriter(svSocket.getOutputStream()));
+
+            new Thread(this).start();
 
             // read channel from stdin
             BufferedReader systemIn = new BufferedReader(new InputStreamReader(System.in));
@@ -98,14 +114,18 @@ public class Client implements Runnable {
         switch (menu.getState()) {
             case 0:
                 if (choice == 1) {
+
                     this.login();
                 }
                 if (choice == 2) {
+
                     this.register();
                 }
                 if (choice == 0) {
+
                     System.exit(0);
                 }
+
                 break;
 
             case 1:
@@ -118,6 +138,7 @@ public class Client implements Runnable {
                 if (choice == 0) {
                     this.sendMessage("RESERVARINSTANCIA");
                 }
+
                 break;
         }
     }
@@ -136,9 +157,7 @@ public class Client implements Runnable {
 
         String query = String.join(" ", "LOGIN", username, password);
 
-        outSv.write(query);
-        outSv.newLine();
-        outSv.flush();
+        this.sendMessage(query);
 
     }
 
@@ -147,11 +166,10 @@ public class Client implements Runnable {
         String username = menu.readStringFromUser("Username: ");
         String password = menu.readStringFromUser("Password: ");
 
-        String query = String.join(" ", "REGIST", username, password);
+        String query = String.join(" ", "REGISTER", username, password);
 
-        outSv.write(query);
-        outSv.newLine();
-        outSv.flush();
+        this.sendMessage(query);
+
     }
 
     public static void main(String[] args) {
