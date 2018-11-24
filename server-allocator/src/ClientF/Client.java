@@ -3,7 +3,7 @@ package ClientF;
 import java.io.*;
 import java.net.Socket;
 
-public class Client {
+public class Client implements Runnable {
 
     private Socket svSocket;
     private String hostname;
@@ -17,6 +17,37 @@ public class Client {
 
         this.hostname = hostname;
         this.port = port;
+    }
+
+    @Override
+    public void run() {
+
+        String responseFromSv;
+
+        try {
+            while ((responseFromSv = inSv.readLine()) != null) {
+
+                this.parseResponse(responseFromSv);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void parseResponse (String responseFromSv) {
+
+        String[] data = responseFromSv.split(" ", 2);
+
+        switch (data[0]) {
+
+            case "LOGIN":
+
+
+            case "SIGNUP":
+
+        }
+
     }
 
     public void startClient() {
@@ -78,13 +109,13 @@ public class Client {
                 break;
 
             case 1:
-                if (choice==1) {
+                if (choice == 1) {
                     this.sendMessage("OVERVIEW");
                 }
-                if (choice==2) {
+                if (choice == 2) {
                     this.sendMessage("RESERVARSV");
                 }
-                if (choice==0) {
+                if (choice == 0) {
                     this.sendMessage("RESERVARINSTANCIA");
                 }
                 break;

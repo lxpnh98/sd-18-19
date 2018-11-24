@@ -11,7 +11,7 @@ public class ServerWorker implements Runnable {
     private BufferedWriter clientOut;
     private BufferedReader clientIn;
 
-    public ServerWorker(Socket client, Server server) throws IOException {
+    public ServerWorker(Socket client, Server server) throws IOException, NullPointerException {
 
         this.client = client;
         this.server = server;
@@ -20,6 +20,7 @@ public class ServerWorker implements Runnable {
 
     }
 
+    @Override
     public void run() {
 
         try {
@@ -27,6 +28,7 @@ public class ServerWorker implements Runnable {
             String responseFromClient;
             while ((responseFromClient = clientIn.readLine()) != null ) {
 
+                this.parseResponse(responseFromClient);
 
             }
 
@@ -39,12 +41,26 @@ public class ServerWorker implements Runnable {
 
     }
 
+    private void parseResponse (String responseFromClient) {
+
+        String[] data = responseFromClient.split(" ", 2);
+
+        switch (data[0]) {
+
+            case "LOGIN":
+
+                System.out.println("Recebeu login");
+
+            case "SIGNUP":
+
+        }
+
+
+    }
+
     // fazer método para o login
 
     // fazer método para o registo
 
-    // fazer método para parse daquilo q vem do client
-
-    // fazer método para o write no client
 
 }
