@@ -10,8 +10,8 @@ public class Client implements Runnable {
     private int port;
     private Menu menu;
 
-    private BufferedReader inSv;
-    private BufferedWriter outSv;
+    private BufferedReader serverIn;
+    private BufferedWriter serverOut;
 
     public Client(String hostname, int port) {
 
@@ -25,7 +25,7 @@ public class Client implements Runnable {
         String responseFromSv;
 
         try {
-            while ((responseFromSv = inSv.readLine()) != null) {
+            while ((responseFromSv = serverIn.readLine()) != null) {
 
                 this.parseResponse(responseFromSv);
 
@@ -88,8 +88,8 @@ public class Client implements Runnable {
             System.out.println("ClientF.Client -> Connection done!");
 
             // read and write channels from server socket
-            inSv = new BufferedReader(new InputStreamReader(svSocket.getInputStream()));
-            outSv = new BufferedWriter(new OutputStreamWriter(svSocket.getOutputStream()));
+            serverIn = new BufferedReader(new InputStreamReader(svSocket.getInputStream()));
+            serverOut = new BufferedWriter(new OutputStreamWriter(svSocket.getOutputStream()));
 
             new Thread(this).start();
 
@@ -157,9 +157,9 @@ public class Client implements Runnable {
 
     private void sendMessage(String message) throws IOException {
 
-        outSv.write(message);
-        outSv.newLine();
-        outSv.flush();
+        serverOut.write(message);
+        serverOut.newLine();
+        serverOut.flush();
     }
 
     private void login() throws IOException {
