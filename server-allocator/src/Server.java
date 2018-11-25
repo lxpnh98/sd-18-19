@@ -8,14 +8,19 @@ public class Server {
     private ServerSocket svSocket;
     private int port;
     private HashMap<String, User> users;
+    private HashMap<String, ServerProduct> servers;
 
     public Server(int port) {
 
         this.port = port;
         this.users = new HashMap<>();
+        this.servers = new HashMap<>();
+
     }
 
     public void startServer() {
+
+        this.createTestServers();
 
         try {
 
@@ -81,6 +86,51 @@ public class Server {
     public User getUser(String username) {
 
         return this.users.get(username);
+    }
+
+    private void createServer(String id, float price, String type) {
+
+        ServerProduct sp = new ServerProduct(id, price, type);
+
+        this.servers.put(id, sp);
+
+    }
+
+    private void createTestServers() {
+
+        // creating test servers
+        this.createServer("f1.micro", 20, "fixed");
+        this.createServer("f2.micro", 20, "fixed");
+        this.createServer("f3.micro", 20, "fixed");
+        this.createServer("f4.micro", 20, "fixed");
+        this.createServer("f5.micro", 20, "fixed");
+        this.createServer("f1.normal", 40, "fixed");
+        this.createServer("f2.normal", 40, "fixed");
+        this.createServer("f3.normal", 40, "fixed");
+        this.createServer("f4.normal", 40, "fixed");
+        this.createServer("f5.normal", 40, "fixed");
+        this.createServer("f1.large", 60, "fixed");
+        this.createServer("f2.large", 60, "fixed");
+        this.createServer("f3.large", 60, "fixed");
+        this.createServer("f4.large", 60, "fixed");
+        this.createServer("f5.large", 60, "fixed");
+
+        this.createServer("a1.micro", 30, "auction");
+        this.createServer("a2.micro", 30, "auction");
+        this.createServer("a3.micro", 30, "auction");
+        this.createServer("a4.micro", 30, "auction");
+        this.createServer("a5.micro", 30, "auction");
+        this.createServer("a1.normal", 50, "auction");
+        this.createServer("a2.normal", 50, "auction");
+        this.createServer("a3.normal", 50, "auction");
+        this.createServer("a4.normal", 50, "auction");
+        this.createServer("a5.normal", 50, "auction");
+        this.createServer("a1.large", 70, "auction");
+        this.createServer("a2.large", 70, "auction");
+        this.createServer("a3.large", 70, "auction");
+        this.createServer("a4.large", 70, "auction");
+        this.createServer("a5.large", 70, "auction");
+
     }
 
     public static void main(String[] args) {
