@@ -61,6 +61,17 @@ public class Client implements Runnable {
                 this.menu.show();
 
                 break;
+
+            case "OVERVIEW":
+
+                System.out.println("Overview Feito");
+
+                this.menu.changeBalance(Float.parseFloat(data[1]));
+
+                this.menu.changeState(2);
+                this.menu.show();
+
+                break;
         }
 
     }

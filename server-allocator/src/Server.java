@@ -78,6 +78,11 @@ public class Server {
 
     }
 
+    public User getUser(String username) {
+
+        return this.users.get(username);
+    }
+
     public static void main(String[] args) {
 
         Server s = new Server(12345);

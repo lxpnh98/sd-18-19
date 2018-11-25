@@ -8,6 +8,8 @@ public class Menu {
     private static final String CLEAR = "\u001b[2J\u001b[H";
     private int state;
 
+    private float balance;
+
     public void show() {
 
         switch (state) {
@@ -25,6 +27,13 @@ public class Menu {
                         "* 1 - Consultar conta corrente      *\n" +
                         "* 2 - Reservar servidor             *\n" +
                         "* 3 - Reservar instância            *\n" +
+                        "* 0 - Logout                        *\n" +
+                        "*************************************\n"+RESET);
+                break;
+
+            case 2:
+                System.out.println(CLEAR+"************** WELCOME **************\n" +
+                        "* 1 - Balance: " + this.balance + " *\n" +
                         "* 0 - Logout                        *\n" +
                         "*************************************\n"+RESET);
                 break;
@@ -67,6 +76,11 @@ public class Menu {
     public void changeState(int newState) {
 
         this.state = newState;
+    }
+
+    public void changeBalance(float newBalance) {
+
+        this.balance = newBalance;
     }
 
 }

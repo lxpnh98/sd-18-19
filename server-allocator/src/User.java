@@ -24,6 +24,11 @@ public class User {
         return this.password;
     }
 
+    public float getBalance() {
+
+        return this.balance;
+    }
+
     public void setLoggedIn(boolean status) {
 
         this.loggedIn = status;

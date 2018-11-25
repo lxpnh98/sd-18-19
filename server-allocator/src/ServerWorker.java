@@ -11,6 +11,8 @@ public class ServerWorker implements Runnable {
     private BufferedWriter clientOut;
     private BufferedReader clientIn;
 
+    private User loggedinUser;
+
     public ServerWorker(Socket client, Server server) throws IOException, NullPointerException {
 
         this.client = client;
@@ -65,6 +67,14 @@ public class ServerWorker implements Runnable {
 
                 break;
 
+            case "OVERVIEW":
+
+                System.out.println("Recebeu o ver balance");
+
+                this.getOverview();
+
+                break;
+
         }
 
 
@@ -92,6 +102,8 @@ public class ServerWorker implements Runnable {
 
         this.server.login(username, password);
 
+        this.loggedinUser = this.server.getUser(username);
+
         this.sendMessage("LOGINFEITO");
 
     }
@@ -112,6 +124,16 @@ public class ServerWorker implements Runnable {
         this.server.register(username, password);
 
         this.sendMessage("REGISTOFEITO");
+
+    }
+
+    private void getOverview() throws IOException {
+
+        String balance = Float.toString(this.loggedinUser.getBalance());
+
+        String query = String.join(" ", "OVERVIEW", balance);
+
+        this.sendMessage(query);
 
     }
 
