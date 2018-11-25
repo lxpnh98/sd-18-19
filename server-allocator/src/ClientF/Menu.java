@@ -13,7 +13,7 @@ public class Menu {
         switch (state) {
 
             case 0:
-                System.out.println(CLEAR+"**************** Menu Inicial ***************\n" +
+                System.out.println(CLEAR+"************ Menu Inicial ***********\n" +
                         "* 1 - Iniciar sessão                *\n" +
                         "* 2 - Efetuar registo               *\n" +
                         "* 3 - Sair                          *\n" +

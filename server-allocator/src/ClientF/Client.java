@@ -48,6 +48,7 @@ public class Client implements Runnable {
                 System.out.println("Login Feito");
 
                 this.menu.changeState(1);
+
                 this.menu.show();
 
                 break;
