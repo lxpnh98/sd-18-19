@@ -83,6 +83,14 @@ public class Server {
 
     }
 
+    // TODO método para alugar servidor fixo
+
+    // TODO método para reservar instância em leilão
+
+    // TODO método para libertar servidor
+
+
+
     public User getUser(String username) {
 
         return this.users.get(username);

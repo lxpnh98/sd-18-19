@@ -1,9 +1,12 @@
+import java.util.ArrayList;
+
 public class User {
 
     private String username;
     private String password;
     private float balance;
     private boolean loggedIn;
+    private ArrayList<ServerProduct> servers;
 
     public User(String user, String pass) {
 
