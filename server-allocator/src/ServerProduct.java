@@ -4,13 +4,23 @@ public class ServerProduct {
     private float price;
     private String type;
 
+    private int status;
+
     public ServerProduct(String id, float price, String type) {
 
         this.id = id;
         this.price = price;
         this.type = type;
+        this.status = 0;
 
     }
+
+    public void changeStatus(int newStatus) {
+
+        this.status = newStatus;
+
+    }
+
 
 
 }

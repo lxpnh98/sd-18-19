@@ -84,11 +84,17 @@ public class Server {
     }
 
     // TODO método para alugar servidor fixo
+    // neste método, em caso de indisponibilidade de servidores do tipo pedido,
+    // poderão ser canceladas reservas concedidas em leilão para obter o servidor pretendido.
+
 
     // TODO método para reservar instância em leilão
 
-    // TODO método para libertar servidor
+    public void freeServer(String serverID) {
 
+        this.servers.get(serverID).changeStatus(0);
+
+    }
 
 
     public User getUser(String username) {
