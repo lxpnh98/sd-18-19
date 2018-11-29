@@ -81,11 +81,11 @@ public class Client implements Runnable {
         try {
 
             System.out.println("#### CLIENT ####");
-            System.out.println("ClientF.Client -> Connecting to server...");
+            System.out.println("Client -> Connecting to server...");
 
             this.svSocket = new Socket(this.hostname, this.port);
 
-            System.out.println("ClientF.Client -> Connection done!");
+            System.out.println("Client -> Connection done!");
 
             // read and write channels from server socket
             serverIn = new BufferedReader(new InputStreamReader(svSocket.getInputStream()));
