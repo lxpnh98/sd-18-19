@@ -17,7 +17,6 @@ public class Auction implements Runnable {
         this.svSocket = new Socket("127.0.0.1", 12345);
         this.serverToRent = serverToRent;
         this.minPrice = minPrice;
-        this.actualPrice = minPrice;
         this.clientUsername = null;
 
         serverIn = new BufferedReader(new InputStreamReader(svSocket.getInputStream()));
