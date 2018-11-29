@@ -21,6 +21,12 @@ public class ServerProduct {
 
     }
 
+    public void changeType(String newType) {
+
+        this.type = newType;
+
+    }
+
     public String getID() {
 
         return this.id;

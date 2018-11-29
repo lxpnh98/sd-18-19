@@ -29,6 +29,8 @@ public class Auction implements Runnable {
     @Override
     public void run() {
 
+        System.out.println("LEILÃO ATIVO e à espera de bids");
+
         String responseFromSv;
 
         try {

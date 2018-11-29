@@ -23,12 +23,12 @@ public class Server {
 
     public void startServer() {
 
-        this.createTestServers();
-
         try {
 
             this.svSocket = new ServerSocket(this.port);
             System.out.println("#### SERVER ####");
+
+            this.createTestServers();
 
             while (true) {
 
@@ -49,6 +49,8 @@ public class Server {
 
             ioex.printStackTrace();
         }
+
+
 
     }
 
@@ -90,7 +92,10 @@ public class Server {
     // neste método, em caso de indisponibilidade de servidores do tipo pedido,
     // poderão ser canceladas reservas concedidas em leilão para obter o servidor pretendido.
 
-    private void createAuctionServer(ServerProduct server) throws IOException {
+    private void createAuctionServer(String svID) throws IOException {
+
+        ServerProduct server = this.servers.get(svID);
+        server.changeType("auction");
 
         Auction newAuction = new Auction(server, 10);
 
@@ -136,7 +141,7 @@ public class Server {
 
     }
 
-    private void createTestServers() {
+    private void createTestServers() throws IOException {
 
         // creating test servers
         this.createServer("f1.micro", 20, "fixed");
@@ -155,21 +160,27 @@ public class Server {
         this.createServer("f4.large", 60, "fixed");
         this.createServer("f5.large", 60, "fixed");
 
-        this.createServer("a1.micro", 30, "auction");
-        this.createServer("a2.micro", 30, "auction");
-        this.createServer("a3.micro", 30, "auction");
-        this.createServer("a4.micro", 30, "auction");
-        this.createServer("a5.micro", 30, "auction");
-        this.createServer("a1.normal", 50, "auction");
-        this.createServer("a2.normal", 50, "auction");
-        this.createServer("a3.normal", 50, "auction");
-        this.createServer("a4.normal", 50, "auction");
-        this.createServer("a5.normal", 50, "auction");
-        this.createServer("a1.large", 70, "auction");
-        this.createServer("a2.large", 70, "auction");
-        this.createServer("a3.large", 70, "auction");
-        this.createServer("a4.large", 70, "auction");
-        this.createServer("a5.large", 70, "auction");
+        this.createServer("a1.micro", 30, "fixed");
+        this.createServer("a2.micro", 30, "fixed");
+        this.createServer("a3.micro", 30, "fixed");
+        this.createServer("a4.micro", 30, "fixed");
+        this.createServer("a5.micro", 30, "fixed");
+        this.createServer("a1.normal", 50, "fixed");
+        this.createServer("a2.normal", 50, "fixed");
+        this.createServer("a3.normal", 50, "fixed");
+        this.createServer("a4.normal", 50, "fixed");
+        this.createServer("a5.normal", 50, "fixed");
+        this.createServer("a1.large", 70, "fixed");
+        this.createServer("a2.large", 70, "fixed");
+        this.createServer("a3.large", 70, "fixed");
+        this.createServer("a4.large", 70, "fixed");
+        this.createServer("a5.large", 70, "fixed");
+
+        this.createAuctionServer("a1.micro");
+        this.createAuctionServer("a2.micro");
+        this.createAuctionServer("a3.micro");
+        this.createAuctionServer("a4.micro");
+        this.createAuctionServer("a5.micro");
 
     }
 
