@@ -7,14 +7,17 @@ public class Server {
 
     private ServerSocket svSocket;
     private int port;
+
     private HashMap<String, User> users;
     private HashMap<String, ServerProduct> servers;
+    private HashMap<String, Thread> auctions;
 
     public Server(int port) {
 
         this.port = port;
         this.users = new HashMap<>();
         this.servers = new HashMap<>();
+        this.auctions = new HashMap<>();
 
     }
 
@@ -87,12 +90,35 @@ public class Server {
     // neste método, em caso de indisponibilidade de servidores do tipo pedido,
     // poderão ser canceladas reservas concedidas em leilão para obter o servidor pretendido.
 
+    private void createAuctionServer(ServerProduct server) throws IOException {
+
+        Auction newAuction = new Auction(server, 10);
+
+        Thread t1 = new Thread(newAuction);
+        t1.start();
+
+        this.auctions.put(server.getID(), t1);
+
+    }
+
+    public void bidAuctionServer(Auction auction) {
+
+
+
+    }
+
 
     // TODO método para reservar instância em leilão
 
     public void freeServer(String serverID) {
 
         this.servers.get(serverID).changeStatus(0);
+
+    }
+
+    private void rentServer() {
+
+
 
     }
 

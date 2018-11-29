@@ -21,6 +21,12 @@ public class ServerProduct {
 
     }
 
+    public String getID() {
+
+        return this.id;
+
+    }
+
 
 
 }
