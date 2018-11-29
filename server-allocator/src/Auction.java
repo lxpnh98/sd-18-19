@@ -54,7 +54,7 @@ public class Auction implements Runnable {
         serverOut.flush();
     }
 
-    private void parseResponse (String responseFromSv) {
+    private void parseResponse (String responseFromSv) throws IOException {
 
         String[] data = responseFromSv.split(" ", 2);
 
@@ -64,7 +64,7 @@ public class Auction implements Runnable {
 
                 System.out.println("Oferta feita");
 
-                this.bidReceived();
+                this.bidReceived(data[1], data[2]);
 
                 break;
 
@@ -72,11 +72,13 @@ public class Auction implements Runnable {
 
     }
 
-    private void bidReceived(String clientUsername, float money) throws IOException {
+    private void bidReceived(String clientUsername, String money) throws IOException {
 
-        if (money >= this.minPrice) {
+        float price = Float.parseFloat(money);
 
-            this.serverToRent.changePrice(money);
+        if (price >= this.minPrice) {
+
+            this.serverToRent.changePrice(price);
 
         }
 
