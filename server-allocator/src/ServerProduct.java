@@ -27,6 +27,12 @@ public class ServerProduct {
 
     }
 
+    public void changePrice(float newPrice) {
+
+        this.price = newPrice;
+
+    }
+
     public String getID() {
 
         return this.id;

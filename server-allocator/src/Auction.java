@@ -5,7 +5,6 @@ public class Auction implements Runnable {
 
     private ServerProduct serverToRent;
     private float minPrice;
-    private float actualPrice;
     private String clientUsername;
 
     private Socket svSocket;
@@ -66,9 +65,23 @@ public class Auction implements Runnable {
 
                 System.out.println("Oferta feita");
 
+                this.bidReceived();
+
                 break;
 
         }
+
+    }
+
+    private void bidReceived(String clientUsername, float money) throws IOException {
+
+        if (money >= this.minPrice) {
+
+            this.serverToRent.changePrice(money);
+
+        }
+
+        this.sendMessage("Oferta aceite");
 
     }
 
