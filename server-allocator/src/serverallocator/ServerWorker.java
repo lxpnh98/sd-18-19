@@ -213,16 +213,4 @@ public class ServerWorker implements Runnable {
 
     }
 
-    private void shiftArray(ArrayList<ServerProduct> array) {
-
-        // make a loop to run through the array list
-        for(int i = array.size() - 1; i > 0; i--) {
-
-            // set the last element to the value of the 2nd to last element
-            array.set(i, array.get(i - 1));
-        }
-
-    }
-
-
 }
