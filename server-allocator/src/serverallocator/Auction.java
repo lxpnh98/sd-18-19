@@ -1,3 +1,5 @@
+package serverallocator;
+
 import java.io.*;
 import java.net.Socket;
 

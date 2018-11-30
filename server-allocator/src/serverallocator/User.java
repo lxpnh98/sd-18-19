@@ -1,3 +1,4 @@
+package serverallocator;
 import java.util.ArrayList;
 
 public class User {

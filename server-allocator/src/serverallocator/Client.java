@@ -1,7 +1,8 @@
-package ClientF;
+package serverallocator;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Client implements Runnable {
 
@@ -69,6 +70,44 @@ public class Client implements Runnable {
                 this.menu.changeBalance(Float.parseFloat(data[1]));
 
                 this.menu.changeState(2);
+                this.menu.show();
+
+                break;
+
+            case "MANDASVFIXOS":
+
+                System.out.println("Mostrar svs fixos");
+
+                ArrayList<String> array = new ArrayList<>();
+
+                String[] parts = data[1].split(" ");
+                for (String part : parts) {
+
+                    array.add(part);
+                }
+
+                this.menu.changeArray(array);
+
+                this.menu.changeState(3);
+                this.menu.show();
+
+                break;
+
+            case "MANDASVLEILAO":
+
+                System.out.println("Mostrar svs leiloes");
+
+                ArrayList<String> array1 = new ArrayList<>();
+
+                String[] parts1 = data[1].split(" ");
+                for (String part : parts1) {
+
+                    array1.add(part);
+                }
+
+                this.menu.changeArray(array1);
+
+                this.menu.changeState(4);
                 this.menu.show();
 
                 break;

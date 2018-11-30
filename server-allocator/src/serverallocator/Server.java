@@ -1,6 +1,9 @@
+package serverallocator;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Server {
@@ -124,6 +127,38 @@ public class Server {
     private void rentServer() {
 
 
+
+    }
+
+    public ArrayList<ServerProduct> getListOfFixedServers() {
+
+        ArrayList<ServerProduct> list = new ArrayList<>();
+
+        for (ServerProduct sp : servers.values()) {
+
+            if (sp.getStatus() == 0 && sp.getType().equals("fixed")) {
+
+                list.add(sp);
+            }
+        }
+
+        return list;
+
+    }
+
+    public ArrayList<ServerProduct> getListOfAuctionServers() {
+
+        ArrayList<ServerProduct> list = new ArrayList<>();
+
+        for (ServerProduct sp : servers.values()) {
+
+            if (sp.getStatus() == 0 && sp.getType().equals("auction")) {
+
+                list.add(sp);
+            }
+        }
+
+        return list;
 
     }
 

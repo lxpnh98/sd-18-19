@@ -1,10 +1,12 @@
+package serverallocator;
+
 public class ServerProduct {
 
     private String id;
     private float price;
     private String type;
 
-    private int status;
+    private int status; // 1 ocupado, 0 livre
 
     public ServerProduct(String id, float price, String type) {
 
@@ -36,6 +38,24 @@ public class ServerProduct {
     public String getID() {
 
         return this.id;
+
+    }
+
+    public float getPrice() {
+
+        return this.price;
+
+    }
+
+    public float getStatus() {
+
+        return this.status;
+
+    }
+
+    public String getType() {
+
+        return this.type;
 
     }
 

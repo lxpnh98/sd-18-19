@@ -1,5 +1,9 @@
+package serverallocator;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ServerWorker implements Runnable {
 
@@ -75,6 +79,22 @@ public class ServerWorker implements Runnable {
 
                 break;
 
+            case "RESERVARSV":
+
+                System.out.println("Recebeu reservar servidor fixo");
+
+                this.getFixedServers();
+
+                break;
+
+            case "RESERVARINSTANCIA":
+
+                System.out.println("Recebeu bidar leilão");
+
+                this.getAuctionServers();
+
+                break;
+
         }
 
 
@@ -134,6 +154,73 @@ public class ServerWorker implements Runnable {
         String query = String.join(" ", "OVERVIEW", balance);
 
         this.sendMessage(query);
+
+    }
+
+    private void getFixedServers() throws IOException {
+
+        ArrayList<ServerProduct> array = this.server.getListOfFixedServers();
+
+        String res = "MANDASVFIXOS";
+
+        List<String> idsList = array.stream()
+                .map(ServerProduct::getID)
+                .collect(Collectors.toList());
+
+        List<Float> pricesList = array.stream()
+                .map(ServerProduct::getPrice)
+                .collect(Collectors.toList());
+
+        ArrayList<String> finalList = new ArrayList<>(array.size());
+
+        for (int i = 0; i < array.size(); i++) {
+
+            finalList.add(idsList.get(i) + " " + pricesList.get(i));
+
+        }
+
+        String res1 = String.join(" ", finalList);
+
+        this.sendMessage(res + " " + res1);
+
+    }
+
+    private void getAuctionServers() throws IOException {
+
+        ArrayList<ServerProduct> array = this.server.getListOfFixedServers();
+
+        String res = "MANDASVLEILAO";
+
+        List<String> idsList = array.stream()
+                .map(ServerProduct::getID)
+                .collect(Collectors.toList());
+
+        List<Float> pricesList = array.stream()
+                .map(ServerProduct::getPrice)
+                .collect(Collectors.toList());
+
+        ArrayList<String> finalList = new ArrayList<>(array.size());
+
+        for (int i = 0; i < array.size(); i++) {
+
+            finalList.add(idsList.get(i) + " " + pricesList.get(i));
+
+        }
+
+        String res1 = String.join(" ", finalList);
+
+        this.sendMessage(res + " " + res1);
+
+    }
+
+    private void shiftArray(ArrayList<ServerProduct> array) {
+
+        // make a loop to run through the array list
+        for(int i = array.size() - 1; i > 0; i--) {
+
+            // set the last element to the value of the 2nd to last element
+            array.set(i, array.get(i - 1));
+        }
 
     }
 

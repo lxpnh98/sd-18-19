@@ -1,5 +1,7 @@
-package ClientF;
+package serverallocator;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Menu {
@@ -9,13 +11,14 @@ public class Menu {
     private int state;
 
     private float balance;
+    private ArrayList<String> data;
 
     public void show() {
 
         switch (state) {
 
             case 0:
-                System.out.println(CLEAR+"************ Menu Inicial ***********\n" +
+                System.out.println(CLEAR+"*** Menu Inicial ***\n" +
                         "* 1 - Iniciar sessão                *\n" +
                         "* 2 - Efetuar registo               *\n" +
                         "* 3 - Sair                          *\n" +
@@ -23,7 +26,7 @@ public class Menu {
                 break;
 
             case 1:
-                System.out.println(CLEAR+"************** WELCOME **************\n" +
+                System.out.println(CLEAR+"*** WELCOME ***\n" +
                         "* 1 - Consultar conta corrente      *\n" +
                         "* 2 - Reservar servidor             *\n" +
                         "* 3 - Reservar instância            *\n" +
@@ -32,11 +35,38 @@ public class Menu {
                 break;
 
             case 2:
-                System.out.println(CLEAR+"************** WELCOME **************\n" +
+                System.out.println(CLEAR+"*** WELCOME ***\n" +
                         "* 1 - Balance: " + this.balance + " *\n" +
                         "* 0 - Logout                        *\n" +
                         "*************************************\n"+RESET);
                 break;
+
+            case 3:
+                System.out.println(CLEAR+"*** SERVIDORES FIXOS ***\n");
+
+                for (int i = 0; i < data.size(); i+=2) {
+
+                    System.out.println("* " + data.get(i) + " " + data.get(i+1) + " *\n");
+                }
+
+                System.out.println("* 0 - Voltar *\n");
+                System.out.println("*************************************\n" + RESET);
+
+                break;
+
+            case 4:
+                System.out.println(CLEAR+"*** SERVIDORES PARA ALUGAR ***\n");
+
+                for (int i = 0; i < data.size(); i+=2) {
+
+                    System.out.println("* " + data.get(i) + " " + data.get(i+1) + " *\n");
+                }
+
+                System.out.println("* 0 - Voltar *\n");
+                System.out.println("*************************************\n" + RESET);
+
+                break;
+
         }
 
         System.out.println("Escolha uma opção: ");
@@ -81,6 +111,12 @@ public class Menu {
     public void changeBalance(float newBalance) {
 
         this.balance = newBalance;
+    }
+
+    public void changeArray(ArrayList<String> data) {
+
+        this.data = data;
+
     }
 
 }
