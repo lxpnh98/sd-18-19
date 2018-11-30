@@ -42,28 +42,28 @@ public class Menu {
                 break;
 
             case 3:
-                System.out.println(CLEAR+"*** SERVIDORES FIXOS ***\n");
+                System.out.println(CLEAR+"*** SERVIDORES FIXOS ***");
 
                 for (int i = 0; i < data.size(); i+=2) {
 
-                    System.out.println("* " + data.get(i) + " " + data.get(i+1) + " *\n");
+                    System.out.println("* " + data.get(i) + " " + data.get(i+1) + " *");
                 }
 
-                System.out.println("* 0 - Voltar *\n");
-                System.out.println("*************************************\n" + RESET);
+                System.out.println("* 0 - Voltar *");
+                System.out.println("*************************************" + RESET);
 
                 break;
 
             case 4:
-                System.out.println(CLEAR+"*** SERVIDORES PARA ALUGAR ***\n");
+                System.out.println(CLEAR+"*** SERVIDORES PARA ALUGAR ***");
 
                 for (int i = 0; i < data.size(); i+=2) {
 
-                    System.out.println("* " + data.get(i) + " " + data.get(i+1) + " *\n");
+                    System.out.println("* " + data.get(i) + " " + data.get(i+1) + " *");
                 }
 
-                System.out.println("* 0 - Voltar *\n");
-                System.out.println("*************************************\n" + RESET);
+                System.out.println("* 0 - Voltar *");
+                System.out.println("*************************************" + RESET);
 
                 break;
 
