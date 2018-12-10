@@ -47,6 +47,8 @@ public class ServerWorker implements Runnable {
 
     }
 
+    // parse da resposta do cliente
+    // em data[0] vem o ID da cena e no restante vem outras informações
     private void parseResponse (String responseFromClient) throws IOException {
 
         String[] data = responseFromClient.split(" ", 2);
@@ -100,6 +102,7 @@ public class ServerWorker implements Runnable {
 
     }
 
+    // envia mensagem para o cliente
     private void sendMessage(String message) throws IOException {
 
         clientOut.write(message);
@@ -107,6 +110,7 @@ public class ServerWorker implements Runnable {
         clientOut.flush();
     }
 
+    // envia mensagem prara o cliente com sucesso ou não do login
     private void login(String dataLogin) throws IOException {
 
         String[] data = dataLogin.split(" ");
@@ -128,6 +132,7 @@ public class ServerWorker implements Runnable {
 
     }
 
+    // envia mensagem para o cliente com sucesso ou não do registo
     private void register(String dataRegister) throws IOException {
 
         String[] data = dataRegister.split(" ");
@@ -157,6 +162,7 @@ public class ServerWorker implements Runnable {
 
     }
 
+    // obtem servidores fixos do servidor e envia em formato de string para o cliente
     private void getFixedServers() throws IOException {
 
         ArrayList<ServerProduct> array = this.server.getListOfFixedServers();
@@ -185,9 +191,10 @@ public class ServerWorker implements Runnable {
 
     }
 
+    // obtem servidores leilao do servidor e envia em formato de string para o cliente
     private void getAuctionServers() throws IOException {
 
-        ArrayList<ServerProduct> array = this.server.getListOfFixedServers();
+        ArrayList<ServerProduct> array = this.server.getListOfAuctionServers();
 
         String res = "MANDASVLEILAO";
 

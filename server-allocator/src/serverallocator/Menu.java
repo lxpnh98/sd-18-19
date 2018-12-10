@@ -72,6 +72,7 @@ public class Menu {
         System.out.println("Escolha uma opção: ");
     }
 
+    // método para ler strings da consola escritas pelo utilizador
     public String readStringFromUser(String question) {
 
         Scanner input = new Scanner(System.in);
@@ -81,6 +82,7 @@ public class Menu {
         return input.nextLine();
     }
 
+    // retorna input da escolha do utilizador
     public int userChoice() {
 
         int readInt;

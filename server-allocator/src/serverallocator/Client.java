@@ -38,6 +38,8 @@ public class Client implements Runnable {
         }
     }
 
+    // parse da resposta do servidor
+    // data[0] tem o tipo da mensagem e as restantes datas têm outras informações
     private void parseResponse (String responseFromSv) {
 
         String[] data = responseFromSv.split(" ", 2);
@@ -48,8 +50,10 @@ public class Client implements Runnable {
 
                 System.out.println("Login Feito");
 
+                // muda o estado do menu
                 this.menu.changeState(1);
 
+                // mostra o menu com o novo estado
                 this.menu.show();
 
                 break;
@@ -58,7 +62,10 @@ public class Client implements Runnable {
 
                 System.out.println("Registo Feito");
 
+                // muda o estado do menu
                 this.menu.changeState(0);
+
+                // mostra o menu com o novo estado
                 this.menu.show();
 
                 break;
@@ -69,7 +76,10 @@ public class Client implements Runnable {
 
                 this.menu.changeBalance(Float.parseFloat(data[1]));
 
+                // muda o estado do menu
                 this.menu.changeState(2);
+
+                // mostra o menu com o novo estado
                 this.menu.show();
 
                 break;
@@ -86,9 +96,13 @@ public class Client implements Runnable {
                     array.add(part);
                 }
 
+                // array com os servidores fixos para mostrar no menu
                 this.menu.changeArray(array);
 
+                // muda o estado do menu
                 this.menu.changeState(3);
+
+                // mostra o menu com o novo estado
                 this.menu.show();
 
                 break;
@@ -105,9 +119,13 @@ public class Client implements Runnable {
                     array1.add(part);
                 }
 
+                // array com os servidores fixos para mostrar no menu
                 this.menu.changeArray(array1);
 
+                // muda o estado do menu
                 this.menu.changeState(4);
+
+                // mostra o menu com o novo estado
                 this.menu.show();
 
                 break;
@@ -144,7 +162,7 @@ public class Client implements Runnable {
 
                 try {
 
-                    controller(choice);
+                    this.controller(choice);
 
                 } catch (IOException e) {
 
@@ -160,6 +178,7 @@ public class Client implements Runnable {
 
     }
 
+    // controla o menu de acordo com o input/escolha do utilizador
     private void controller (int choice) throws IOException {
 
         switch (menu.getState()) {
@@ -194,6 +213,7 @@ public class Client implements Runnable {
         }
     }
 
+    // envia mensagem para o servidor
     private void sendMessage(String message) throws IOException {
 
         serverOut.write(message);
@@ -201,6 +221,7 @@ public class Client implements Runnable {
         serverOut.flush();
     }
 
+    // envia string para o servidor no formato: LOGIN username password
     private void login() throws IOException {
 
         String username = menu.readStringFromUser("Username: ");
@@ -212,6 +233,7 @@ public class Client implements Runnable {
 
     }
 
+    // envia string para o servidor no formato: REGISTER username password
     private void register() throws IOException {
 
         String username = menu.readStringFromUser("Username: ");

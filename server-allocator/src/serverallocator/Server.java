@@ -57,6 +57,7 @@ public class Server {
 
     }
 
+    // MÉTODO LOGIN
     // evitar logins tbm ao mesmo tempo? neste caso verificar a flag loggedIn
     public boolean login(String username, String password) {
 
@@ -76,6 +77,7 @@ public class Server {
 
     }
 
+    // MÉTODO REGISTO
     // evitar registos ao mesmo tempo :P
     public synchronized boolean register(String username, String password) {
 
@@ -94,7 +96,6 @@ public class Server {
     // TODO método para alugar servidor fixo
     // neste método, em caso de indisponibilidade de servidores do tipo pedido,
     // poderão ser canceladas reservas concedidas em leilão para obter o servidor pretendido.
-
     private void createAuctionServer(String svID) throws IOException {
 
         ServerProduct server = this.servers.get(svID);
@@ -109,6 +110,7 @@ public class Server {
 
     }
 
+    // TODO reservar instancia em leilao
     public void bidAuctionServer(Auction auction) {
 
 
@@ -118,18 +120,19 @@ public class Server {
 
     // TODO método para reservar instância em leilão
 
+    // liberta servidor
     public void freeServer(String serverID) {
 
         this.servers.get(serverID).changeStatus(0);
 
     }
 
+    // TODO alugar servidor fixo
     private void rentServer() {
-
-
 
     }
 
+    // retorna lista de servidores fixos
     public ArrayList<ServerProduct> getListOfFixedServers() {
 
         ArrayList<ServerProduct> list = new ArrayList<>();
@@ -146,6 +149,7 @@ public class Server {
 
     }
 
+    // retorna lista de servidores a leilao
     public ArrayList<ServerProduct> getListOfAuctionServers() {
 
         ArrayList<ServerProduct> list = new ArrayList<>();
@@ -162,12 +166,13 @@ public class Server {
 
     }
 
-
+    // retorna utilizador
     public User getUser(String username) {
 
         return this.users.get(username);
     }
 
+    // cria servidor
     private void createServer(String id, float price, String type) {
 
         ServerProduct sp = new ServerProduct(id, price, type);

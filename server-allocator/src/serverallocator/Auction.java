@@ -49,6 +49,7 @@ public class Auction implements Runnable {
 
     }
 
+    // envia mensagem para o servidor
     private void sendMessage(String message) throws IOException {
 
         serverOut.write(message);
@@ -56,6 +57,8 @@ public class Auction implements Runnable {
         serverOut.flush();
     }
 
+    // parse da resposta do servidor.
+    // data[0] é o ID da resposta e as restantes datas são outras informações
     private void parseResponse (String responseFromSv) throws IOException {
 
         String[] data = responseFromSv.split(" ", 2);
@@ -74,6 +77,7 @@ public class Auction implements Runnable {
 
     }
 
+    // o que acontece quando o leilão recebe uma oferta
     private void bidReceived(String clientUsername, String money) throws IOException {
 
         float price = Float.parseFloat(money);
