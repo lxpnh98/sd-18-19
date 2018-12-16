@@ -210,6 +210,7 @@ public class Server {
         this.createServer("a3.normal", 50, "fixed");
         this.createServer("a4.normal", 50, "fixed");
         this.createServer("a5.normal", 50, "fixed");
+
         this.createServer("a1.large", 70, "fixed");
         this.createServer("a2.large", 70, "fixed");
         this.createServer("a3.large", 70, "fixed");

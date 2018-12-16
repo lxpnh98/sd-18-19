@@ -115,14 +115,14 @@ public class ServerWorker implements Runnable {
 
         String[] data = dataLogin.split(" ");
 
-        String username = data[0];
-        String password = data[1];
-
         if (data.length != 2) {
 
             System.out.println("Dados inseridos incorretamente");
             return;
         }
+
+        String username = data[0];
+        String password = data[1];
 
         this.server.login(username, password);
 

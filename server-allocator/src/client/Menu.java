@@ -1,4 +1,4 @@
-package serverallocator;
+package client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
