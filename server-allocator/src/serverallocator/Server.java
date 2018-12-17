@@ -13,7 +13,7 @@ public class Server {
 
     private HashMap<String, User> users;
     private HashMap<String, ServerProduct> servers;
-    private HashMap<String, Thread> auctions;
+    private HashMap<String, Auction> auctions;
 
     public Server(int port) {
 
@@ -103,10 +103,7 @@ public class Server {
 
         Auction newAuction = new Auction(server, 10);
 
-        Thread t1 = new Thread(newAuction);
-        t1.start();
-
-        this.auctions.put(server.getID(), t1);
+        this.auctions.put(server.getID(), newAuction);
 
     }
 

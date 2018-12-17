@@ -1,96 +1,69 @@
 package serverallocator;
 
 import java.io.*;
+import java.util.*;
 import java.net.Socket;
 
-public class Auction implements Runnable {
+class Bid {
+    String client;
+    float value;
+
+    Bid(String c, float v) {
+        this.client = c;
+        this.value = v;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Bid)) return false;
+        return this.client.equals(((Bid)o).client);
+    }
+}
+
+class BidComparator implements Comparator<Bid> {
+    public int compare(Bid o1, Bid o2) {
+        return Float.compare(o1.value, o2.value);
+    }
+}
+
+public class Auction {
 
     private ServerProduct serverToRent;
     private float minPrice;
+    private TreeSet<Bid> bids;
     private String clientUsername;
-
-    private Socket svSocket;
-
-    private BufferedReader serverIn;
-    private BufferedWriter serverOut;
 
     public Auction (ServerProduct serverToRent, float minPrice) throws IOException {
 
-        this.svSocket = new Socket("127.0.0.1", 12345);
         this.serverToRent = serverToRent;
         this.minPrice = minPrice;
         this.clientUsername = null;
-
-        serverIn = new BufferedReader(new InputStreamReader(svSocket.getInputStream()));
-        serverOut = new BufferedWriter(new OutputStreamWriter(svSocket.getOutputStream()));
-
-    }
-
-    @Override
-    public void run() {
-
-        System.out.println("LEILÃO ATIVO e à espera de bids");
-
-        String responseFromSv;
-
-        try {
-
-            while ((responseFromSv = serverIn.readLine()) != null) {
-
-                this.parseResponse(responseFromSv);
-
-            }
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        }
-
-    }
-
-    // envia mensagem para o servidor
-    private void sendMessage(String message) throws IOException {
-
-        serverOut.write(message);
-        serverOut.newLine();
-        serverOut.flush();
-    }
-
-    // parse da resposta do servidor.
-    // data[0] é o ID da resposta e as restantes datas são outras informações
-    private void parseResponse (String responseFromSv) throws IOException {
-
-        String[] data = responseFromSv.split(" ", 2);
-
-        switch (data[0]) {
-
-            case "BIDOFFER":
-
-                System.out.println("Oferta feita");
-
-                this.bidReceived(data[1], data[2]);
-
-                break;
-
-        }
+        this.bids = new TreeSet(new BidComparator());
 
     }
 
     // o que acontece quando o leilão recebe uma oferta
-    private void bidReceived(String clientUsername, String money) throws IOException {
+    private void makeBid(String clientUsername, String money) throws IOException {
 
         float price = Float.parseFloat(money);
 
         if (price >= this.minPrice) {
 
-            this.serverToRent.changePrice(price);
+            // add new bid or update client's bid
+            this.bids.add(new Bid(clientUsername, price));
+
+            String newClient = this.bids.last().client;
+            if (this.clientUsername != newClient) {
+                 // TODO: timestamps
+                // calculate amount to charge old client
+
+                // change current client
+                this.clientUsername = newClient;
+                
+            }
 
         }
 
-        this.sendMessage("Oferta aceite");
-
     }
-
 
 }
