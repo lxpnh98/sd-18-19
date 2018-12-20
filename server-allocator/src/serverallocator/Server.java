@@ -13,14 +13,12 @@ public class Server {
 
     private HashMap<String, User> users;
     private HashMap<String, ServerProduct> servers;
-    private HashMap<String, Auction> auctions;
 
     public Server(int port) {
 
         this.port = port;
         this.users = new HashMap<>();
         this.servers = new HashMap<>();
-        this.auctions = new HashMap<>();
 
     }
 
@@ -96,19 +94,9 @@ public class Server {
     // TODO método para alugar servidor fixo
     // neste método, em caso de indisponibilidade de servidores do tipo pedido,
     // poderão ser canceladas reservas concedidas em leilão para obter o servidor pretendido.
-    private void createAuctionServer(String svID) throws IOException {
-
-        ServerProduct server = this.servers.get(svID);
-        server.changeType("auction");
-
-        Auction newAuction = new Auction(server, 10);
-
-        this.auctions.put(server.getID(), newAuction);
-
-    }
 
     // TODO reservar instancia em leilao
-    public void bidAuctionServer(Auction auction) {
+    public void bidAuctionServer(String id) {
 
 
 
@@ -117,10 +105,8 @@ public class Server {
 
     // TODO método para reservar instância em leilão
 
-    // liberta servidor
+    // TODO: método para libertar servidor
     public void freeServer(String serverID) {
-
-        this.servers.get(serverID).changeStatus(0);
 
     }
 
@@ -136,10 +122,10 @@ public class Server {
 
         for (ServerProduct sp : servers.values()) {
 
-            if (sp.getStatus() == 0 && sp.getType().equals("fixed")) {
+            //if (sp.getStatus() == 0 && sp.getType().equals("fixed")) {
 
                 list.add(sp);
-            }
+            //}
         }
 
         return list;
@@ -153,10 +139,10 @@ public class Server {
 
         for (ServerProduct sp : servers.values()) {
 
-            if (sp.getStatus() == 0 && sp.getType().equals("auction")) {
+            //if (sp.getStatus() == 0 && sp.getType().equals("auction")) {
 
                 list.add(sp);
-            }
+            //}
         }
 
         return list;
@@ -170,9 +156,9 @@ public class Server {
     }
 
     // cria servidor
-    private void createServer(String id, float price, String type) {
+    private void createServer(String id, int numServers, float price, float minBidPrice) {
 
-        ServerProduct sp = new ServerProduct(id, price, type);
+        ServerProduct sp = new ServerProduct(id, numServers, price, minBidPrice);
 
         this.servers.put(id, sp);
 
@@ -181,44 +167,36 @@ public class Server {
     private void createTestServers() throws IOException {
 
         // creating test servers
-        this.createServer("f1.micro", 20, "fixed");
-        this.createServer("f2.micro", 20, "fixed");
-        this.createServer("f3.micro", 20, "fixed");
-        this.createServer("f4.micro", 20, "fixed");
-        this.createServer("f5.micro", 20, "fixed");
-        this.createServer("f1.normal", 40, "fixed");
-        this.createServer("f2.normal", 40, "fixed");
-        this.createServer("f3.normal", 40, "fixed");
-        this.createServer("f4.normal", 40, "fixed");
-        this.createServer("f5.normal", 40, "fixed");
-        this.createServer("f1.large", 60, "fixed");
-        this.createServer("f2.large", 60, "fixed");
-        this.createServer("f3.large", 60, "fixed");
-        this.createServer("f4.large", 60, "fixed");
-        this.createServer("f5.large", 60, "fixed");
-
-        this.createServer("a1.micro", 30, "fixed");
-        this.createServer("a2.micro", 30, "fixed");
-        this.createServer("a3.micro", 30, "fixed");
-        this.createServer("a4.micro", 30, "fixed");
-        this.createServer("a5.micro", 30, "fixed");
-        this.createServer("a1.normal", 50, "fixed");
-        this.createServer("a2.normal", 50, "fixed");
-        this.createServer("a3.normal", 50, "fixed");
-        this.createServer("a4.normal", 50, "fixed");
-        this.createServer("a5.normal", 50, "fixed");
-
-        this.createServer("a1.large", 70, "fixed");
-        this.createServer("a2.large", 70, "fixed");
-        this.createServer("a3.large", 70, "fixed");
-        this.createServer("a4.large", 70, "fixed");
-        this.createServer("a5.large", 70, "fixed");
-
-        this.createAuctionServer("a1.micro");
-        this.createAuctionServer("a2.micro");
-        this.createAuctionServer("a3.micro");
-        this.createAuctionServer("a4.micro");
-        this.createAuctionServer("a5.micro");
+        this.createServer("f1.micro", 5, 20, 2);
+        this.createServer("f2.micro", 5, 20, 2);
+        this.createServer("f3.micro", 5, 20, 2);
+        this.createServer("f4.micro", 5, 20, 2);
+        this.createServer("f5.micro", 5, 20, 2);
+        this.createServer("f1.normal", 5, 40, 2);
+        this.createServer("f2.normal", 5, 40, 2);
+        this.createServer("f3.normal", 5, 40, 2);
+        this.createServer("f4.normal", 5, 40, 2);
+        this.createServer("f5.normal", 5, 40, 2);
+        this.createServer("f1.large", 5, 60, 2);
+        this.createServer("f2.large", 5, 60, 2);
+        this.createServer("f3.large", 5, 60, 2);
+        this.createServer("f4.large", 5, 60, 2);
+        this.createServer("f5.large", 5, 60, 2);
+        this.createServer("a1.micro", 5, 30, 2);
+        this.createServer("a2.micro", 5, 30, 2);
+        this.createServer("a3.micro", 5, 30, 2);
+        this.createServer("a4.micro", 5, 30, 2);
+        this.createServer("a5.micro", 5, 30, 2);
+        this.createServer("a1.normal", 5, 50, 2);
+        this.createServer("a2.normal", 5, 50, 2);
+        this.createServer("a3.normal", 5, 50, 2);
+        this.createServer("a4.normal", 5, 50, 2);
+        this.createServer("a5.normal", 5, 50, 2);
+        this.createServer("a1.large", 5, 70, 2);
+        this.createServer("a2.large", 5, 70, 2);
+        this.createServer("a3.large", 5, 70, 2);
+        this.createServer("a4.large", 5, 70, 2);
+        this.createServer("a5.large", 5, 70, 2);
 
     }
 
