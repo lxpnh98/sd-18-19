@@ -1,9 +1,5 @@
 package serverallocator;
 
-enum ReservationType {
-    ON_DEMAND, SPOT
-}
-
 public class Reservation {
     private String client;
     private String id;
@@ -18,5 +14,21 @@ public class Reservation {
         this.price = price;
         this.client = client;
         this.timestamp = System.currentTimeMillis();
+    }
+
+    public String getClient() {
+        return this.client;
+    }
+
+    public ReservationType getType() {
+        return this.type;
+    }
+
+    public float getPrice() {
+        return this.price;
+    }
+
+    public long getTimestamp() {
+        return this.timestamp;
     }
 }

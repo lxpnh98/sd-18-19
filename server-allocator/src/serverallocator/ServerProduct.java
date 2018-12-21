@@ -62,43 +62,49 @@ public class ServerProduct {
     // returns bill to charge old client, or null
     // TODO: alterar makeBid() para alocar vários servidores
     private Bill makeBid(String clientUsername, String money) throws IOException {
-        return null;
-        /*
         float price = Float.parseFloat(money);
-        String oldClient = this.clientUsername;
-        float toCharge = 0.0f;
 
-        if (price >= this.minPrice) {
+        if (price >= this.minBidPrice) {
 
             // add new bid or update client's bid
             this.bids.add(new Bid(clientUsername, price));
 
-            Bid bestBid = this.bids.last();
-            String newClient = bestBid.client;
-            if (this.clientUsername != newClient) {
+            // TODO: find empty reservation spot
 
-                // 
-                long newTimestamp = System.currentTimeMillis();
+            // find reservation with lowest bid
+            Reservation lowestBid = null;
+            int minIndex = -1;
+            for (int i=0; i<this.numServers; i++) {
+                Reservation curr = this.reservations.get(i);
 
-                // calculate amount to charge old client
-                if (this.clientUsername != null) {
-                    long timeElapsed = newTimestamp - this.timestamp;
-                    toCharge = (timeElapsed / millisecondsInHour) * this.currPrice;
+                // exclude on demand reservations
+                if (curr.getType() == ReservationType.ON_DEMAND) {
+                    continue;
                 }
 
-                // change current client
-                this.clientUsername = newClient;
-                this.currPrice = bestBid.value;
-                this.timestamp = newTimestamp;
+                if (lowestBid == null || lowestBid.getPrice() > curr.getPrice()) {
+                    lowestBid = curr;
+                    minIndex = i;
+                }
+            }
+
+            // if bid made is higher than lowest bid
+            if (lowestBid != null && lowestBid.getPrice() < price) {
+
+                // calculate amount to charge old client
+                long newTimestamp = System.currentTimeMillis();
+                long timeElapsed = newTimestamp - lowestBid.getTimestamp();
+                float toCharge = (timeElapsed / millisecondsInHour) * lowestBid.getPrice();
+
+                // replace reservation
+                this.reservations.set(minIndex, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
+
+                // bill old client
+                return new Bill(lowestBid.getClient(), toCharge);
                 
             }
 
         }
-
-        if (toCharge > 0.0) {
-            return new Bill(oldClient, toCharge);
-        }
         return null;
-    */
     }
 }
