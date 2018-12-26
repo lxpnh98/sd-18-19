@@ -129,6 +129,14 @@ public class Client implements Runnable {
                 this.menu.show();
 
                 break;
+
+            case "LIBERTARSV":
+
+            	System.out.println("Server libertado");
+            	this.menu.changeState(1);
+            	this.menu.show();
+
+                break;
         }
 
     }
@@ -197,7 +205,6 @@ public class Client implements Runnable {
                 }
 
                 break;
-
             case 1:
                 if (choice == 1) {
                     this.sendMessage("OVERVIEW");
@@ -205,11 +212,48 @@ public class Client implements Runnable {
                 if (choice == 2) {
                     this.sendMessage("RESERVARSV");
                 }
-                if (choice == 0) {
+                if (choice == 3) {
                     this.sendMessage("RESERVARINSTANCIA");
+                }
+				if (choice == 4) {
+                    this.sendMessage("LIBERTARSV");
+                }
+                if (choice == 0) {
+                	menu.changeState(0);
+                    this.menu.show();
                 }
 
                 break;
+            case 2:
+                if (choice == 0) {
+                    menu.changeState(0);
+                    this.menu.show();
+                }
+
+                break;
+            case 3:
+                if (choice == 1) {
+                    menu.changeState(3);
+                    this.menu.show();
+                }
+            	if (choice == 0) {
+                    menu.changeState(1);
+                    this.menu.show();
+                }
+
+                break;
+            case 4:
+            	if (choice == 1) {
+                    menu.changeState(4);
+                    this.menu.show();
+                }
+                if (choice == 0) {
+                    menu.changeState(1);
+                    this.menu.show();
+                }
+
+                break;
+
         }
     }
 
