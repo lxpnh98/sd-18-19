@@ -97,6 +97,13 @@ public class ServerWorker implements Runnable {
 
                 break;
 
+            case "LIBERTARSV":
+
+                System.out.println("Recebeu libertar servidor");
+                // TODO Libertar server
+
+                break;
+
         }
 
 
