@@ -96,12 +96,12 @@ public class Server {
     // poderão ser canceladas reservas concedidas em leilão para obter o servidor pretendido.
 
     // TODO reservar instancia em leilao
-    public void bidAuctionServer(String id) {
-
-
-
+    public void bidAuctionServer(String id, String username, String money) throws IOException {
+        if(servers.containsKey(id)) {
+            ServerProduct auctionServer = servers.get(id);
+            auctionServer.makeBid(username, money);
+        }
     }
-
 
     // TODO método para reservar instância em leilão
 
@@ -111,7 +111,7 @@ public class Server {
     }
 
     // TODO alugar servidor fixo
-    private void rentServer() {
+    private void rentServer( ) {
 
     }
 

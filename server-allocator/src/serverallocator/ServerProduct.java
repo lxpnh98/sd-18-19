@@ -61,7 +61,7 @@ public class ServerProduct {
     // o que acontece quando o leilão recebe uma oferta
     // returns bill to charge old client, or null
     // TODO: alterar makeBid() para alocar vários servidores
-    private Bill makeBid(String clientUsername, String money) throws IOException {
+    public Bill makeBid(String clientUsername, String money) throws IOException {
         float price = Float.parseFloat(money);
 
         if (price >= this.minBidPrice) {
