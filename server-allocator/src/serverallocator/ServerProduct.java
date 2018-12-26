@@ -60,51 +60,66 @@ public class ServerProduct {
 
     // o que acontece quando o leilão recebe uma oferta
     // returns bill to charge old client, or null
-    // TODO: alterar makeBid() para alocar vários servidores
     public Bill makeBid(String clientUsername, String money) throws IOException {
         float price = Float.parseFloat(money);
 
-        if (price >= this.minBidPrice) {
+        // if bid < minimum price then do nothing
+        if (price < this.minBidPrice) return null;
 
-            // add new bid or update client's bid
-            this.bids.add(new Bid(clientUsername, price));
+        // add new bid or update client's bid
+        this.bids.add(new Bid(clientUsername, price));
 
-            // TODO: find empty reservation spot
+        // find reservation with lowest bid or the first empty reservation spot
+        int emptyIndex = -1;
+        Reservation lowestBid = null;
+        int minIndex = -1;
+        for (int i=0; i<this.numServers; i++) {
+            Reservation curr = this.reservations.get(i);
 
-            // find reservation with lowest bid
-            Reservation lowestBid = null;
-            int minIndex = -1;
-            for (int i=0; i<this.numServers; i++) {
-                Reservation curr = this.reservations.get(i);
-
-                // exclude on demand reservations
-                if (curr.getType() == ReservationType.ON_DEMAND) {
-                    continue;
-                }
-
-                if (lowestBid == null || lowestBid.getPrice() > curr.getPrice()) {
-                    lowestBid = curr;
-                    minIndex = i;
-                }
+            // check if empty
+            if (curr == null) {
+                emptyIndex = i;
+                break;
             }
 
-            // if bid made is higher than lowest bid
-            if (lowestBid != null && lowestBid.getPrice() < price) {
-
-                // calculate amount to charge old client
-                long newTimestamp = System.currentTimeMillis();
-                long timeElapsed = newTimestamp - lowestBid.getTimestamp();
-                float toCharge = (timeElapsed / millisecondsInHour) * lowestBid.getPrice();
-
-                // replace reservation
-                this.reservations.set(minIndex, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
-
-                // bill old client
-                return new Bill(lowestBid.getClient(), toCharge);
-                
+            // exclude on demand reservations
+            if (curr.getType() == ReservationType.ON_DEMAND) {
+                continue;
             }
 
+            // update minimum bid
+            if (lowestBid == null || lowestBid.getPrice() > curr.getPrice()) {
+                lowestBid = curr;
+                minIndex = i;
+            }
         }
+
+        // if there is empty reservation
+        if (emptyIndex != -1) {
+            // create reservation
+            this.reservations.set(emptyIndex, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
+
+            // no bill to charge
+            return null;
+        }
+
+        // if bid made is higher than lowest bid
+        if (lowestBid != null && lowestBid.getPrice() < price) {
+
+            // calculate amount to charge old client
+            long newTimestamp = System.currentTimeMillis();
+            long timeElapsed = newTimestamp - lowestBid.getTimestamp();
+            float toCharge = (timeElapsed / millisecondsInHour) * lowestBid.getPrice();
+
+            // replace reservation
+            this.reservations.set(minIndex, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
+
+            // bill old client
+            return new Bill(lowestBid.getClient(), toCharge);
+            
+        }
+
+        // if bid is not high enough, no reservation is replaced, and no bill charged
         return null;
     }
 }
