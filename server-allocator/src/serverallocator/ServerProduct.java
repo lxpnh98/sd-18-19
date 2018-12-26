@@ -101,9 +101,7 @@ public class ServerProduct {
 
                 // bill old client
                 return new Bill(lowestBid.getClient(), toCharge);
-                
             }
-
         }
         return null;
     }

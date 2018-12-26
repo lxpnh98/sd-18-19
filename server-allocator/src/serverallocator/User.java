@@ -1,4 +1,5 @@
 package serverallocator;
+
 import java.util.ArrayList;
 
 public class User {
@@ -10,39 +11,33 @@ public class User {
     private ArrayList<ServerProduct> servers;
 
     public User(String user, String pass) {
-
         this.username = user;
         this.password = pass;
         this.balance = 0;
         this.loggedIn = false;
-
     }
 
     public String getUsername() {
-
         return this.username;
     }
 
     public String getPassword() {
-
         return this.password;
     }
 
     public float getBalance() {
-
         return this.balance;
     }
 
     public void setLoggedIn(boolean status) {
-
         this.loggedIn = status;
     }
 
-    public boolean isLoggedIn() {
-
-        return this.loggedIn;
+    public void setBalance(float balance) {
+        this.balance = balance;
     }
 
-
-
+    public boolean isLoggedIn() {
+        return this.loggedIn;
+    }
 }

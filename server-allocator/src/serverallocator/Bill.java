@@ -8,4 +8,8 @@ public class Bill {
         this.client = client;
         this.value = value;
     }
+
+    public float getValue() {
+    	return this.value;
+    }
 }

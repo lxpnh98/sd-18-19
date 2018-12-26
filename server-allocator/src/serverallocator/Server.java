@@ -91,29 +91,44 @@ public class Server {
 
     }
 
-    // TODO método para alugar servidor fixo
     // neste método, em caso de indisponibilidade de servidores do tipo pedido,
     // poderão ser canceladas reservas concedidas em leilão para obter o servidor pretendido.
 
-    // TODO reservar instancia em leilao
+    // Método para fazer uma bid para um servidor de leilão
     public void bidAuctionServer(String id, String username, String money) throws IOException {
         if(servers.containsKey(id)) {
             ServerProduct auctionServer = servers.get(id);
-            auctionServer.makeBid(username, money);
+            Bill conta = auctionServer.makeBid(username, money);
+
+            User user = users.get(username);
+            float balance = user.getBalance() + conta.getValue();
+            user.setBalance(balance);
+        } else {
+            System.out.println("Servidor não encontrado");
         }
     }
-
-    // TODO método para reservar instância em leilão
 
     // TODO: método para libertar servidor
     public void freeServer(String serverID) {
 
     }
 
-    // TODO alugar servidor fixo
-    private void rentServer( ) {
+    // Método para alugar servidores
+    // Ainda
+    /*
+    public void rentServer(String id, String username) {
+        if(servers.containsKey(id)) {
+            ServerProduct rentServer = servers.get(id);
+            Bill conta = rentServer.makeOnDemandReservation(username);
 
+            User user = users.get(username);
+            float balance = user.getBalance() + conta.getValue();
+            user.setBalance(balance);
+        } else {
+            System.out.println("Servidor não encontrado");
+        }
     }
+    */
 
     // retorna lista de servidores fixos
     public ArrayList<ServerProduct> getListOfFixedServers() {

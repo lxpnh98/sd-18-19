@@ -12,7 +12,6 @@ public class Reservation {
         this.id = id;
         this.type = type;
         this.price = price;
-        this.client = client;
         this.timestamp = System.currentTimeMillis();
     }
 
