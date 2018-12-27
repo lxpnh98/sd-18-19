@@ -15,11 +15,9 @@ public class Server {
     private HashMap<String, ServerProduct> servers;
 
     public Server(int port) {
-
         this.port = port;
         this.users = new HashMap<>();
         this.servers = new HashMap<>();
-
     }
 
     public void startServer() {
@@ -50,29 +48,21 @@ public class Server {
 
             ioex.printStackTrace();
         }
-
-
-
     }
 
     // MÉTODO LOGIN
     // evitar logins tbm ao mesmo tempo? neste caso verificar a flag loggedIn
     public boolean login(String username, String password) {
-
         if (!this.users.containsKey(username)) {
-
             return false;
         }
 
         if (this.users.get(username).getPassword().equals(password)) {
-
             this.users.get(username).setLoggedIn(true);
-
             return true;
         }
 
         return false;
-
     }
 
     // MÉTODO REGISTO

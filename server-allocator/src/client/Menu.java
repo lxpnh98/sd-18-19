@@ -48,7 +48,7 @@ public class Menu {
                     System.out.println("* " + data.get(i) + " " + data.get(i+1) + " *");
                 }
 
-                System.out.println("\n* 1 - Reservar servidor             *" +
+                System.out.println("* 1 - Reservar servidor             *" +
                                    "\n* 0 - Voltar                        *" +
                                    "\n*************************************");
 
@@ -62,7 +62,7 @@ public class Menu {
                     System.out.println("* " + data.get(i) + " " + data.get(i+1) + " *");
                 }
 
-                System.out.println("\n* 1 - Fazer licitação               *" +
+                System.out.println("* 1 - Fazer licitação               *" +
                                    "\n* 0 - Voltar                        *" +
                                    "\n*************************************");
 

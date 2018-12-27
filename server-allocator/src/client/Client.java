@@ -15,26 +15,20 @@ public class Client implements Runnable {
     private BufferedWriter serverOut;
 
     public Client(String hostname, int port) {
-
         this.hostname = hostname;
         this.port = port;
     }
 
     @Override
     public void run() {
-
         String responseFromSv;
 
         try {
             while ((responseFromSv = serverIn.readLine()) != null) {
-
                 this.parseResponse(responseFromSv);
-
             }
         } catch (IOException e) {
-
             e.printStackTrace();
-
         }
     }
 
@@ -49,13 +43,24 @@ public class Client implements Runnable {
             case "LOGINFEITO":
 
                 System.out.println("Login Feito");
-
+                
                 // muda o estado do menu
                 this.menu.changeState(1);
 
                 // mostra o menu com o novo estado
                 this.menu.show();
 
+                break;
+
+            case "LOGINFALHADO" :
+
+                System.out.println("Login Falhado");
+                
+                // muda o estado do menu
+                this.menu.changeState(0);
+
+                // mostra o menu com o novo estado
+                this.menu.show();
                 break;
 
             case "REGISTOFEITO":
@@ -67,7 +72,6 @@ public class Client implements Runnable {
 
                 // mostra o menu com o novo estado
                 this.menu.show();
-
                 break;
 
             case "OVERVIEW":
@@ -81,7 +85,6 @@ public class Client implements Runnable {
 
                 // mostra o menu com o novo estado
                 this.menu.show();
-
                 break;
 
             case "MANDASVFIXOS":
@@ -297,6 +300,4 @@ public class Client implements Runnable {
         c.startClient();
 
     }
-
-
 }

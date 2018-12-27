@@ -1,4 +1,5 @@
 package serverallocator;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -18,33 +19,22 @@ public class ServerWorker implements Runnable {
     private User loggedinUser;
 
     public ServerWorker(Socket client, Server server) throws IOException, NullPointerException {
-
         this.client = client;
         this.server = server;
         this.clientIn = new BufferedReader(new InputStreamReader(client.getInputStream()));
         this.clientOut = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
-
     }
 
     @Override
     public void run() {
-
         try {
-
             String responseFromClient;
             while ((responseFromClient = clientIn.readLine()) != null ) {
-
                 this.parseResponse(responseFromClient);
-
             }
-
-
         } catch (IOException ioex) {
-
             ioex.printStackTrace();
-
         }
-
     }
 
     // parse da resposta do cliente
@@ -101,17 +91,12 @@ public class ServerWorker implements Runnable {
 
                 System.out.println("Recebeu libertar servidor");
                 // TODO Libertar server
-
                 break;
-
         }
-
-
     }
 
     // envia mensagem para o cliente
     private void sendMessage(String message) throws IOException {
-
         clientOut.write(message);
         clientOut.newLine();
         clientOut.flush();
@@ -119,11 +104,9 @@ public class ServerWorker implements Runnable {
 
     // envia mensagem prara o cliente com sucesso ou não do login
     private void login(String dataLogin) throws IOException {
-
         String[] data = dataLogin.split(" ");
 
         if (data.length != 2) {
-
             System.out.println("Dados inseridos incorretamente");
             return;
         }
@@ -131,12 +114,12 @@ public class ServerWorker implements Runnable {
         String username = data[0];
         String password = data[1];
 
-        this.server.login(username, password);
-
-        this.loggedinUser = this.server.getUser(username);
-
-        this.sendMessage("LOGINFEITO");
-
+        if (this.server.login(username, password)) {
+            this.loggedinUser = this.server.getUser(username);
+            this.sendMessage("LOGINFEITO");
+        } else {
+            this.sendMessage("LOGINFALHADO");
+        }
     }
 
     // envia mensagem para o cliente com sucesso ou não do registo
