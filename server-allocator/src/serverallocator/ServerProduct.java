@@ -30,7 +30,7 @@ class Bid {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Bid)) return false;
-        return this.client.equals(((Bid)o).client);
+        return this.client.equals(((Bid)o).client) && this.idReservation.equals(((Bid)o).idReservation);
     }
 }
 
@@ -73,17 +73,41 @@ public class ServerProduct {
     }
 
     // free reservation (both on demand and spot reservations)
-    public Bill freeReservation(String username,String idReservation) {
+    public synchronized Bill freeReservation(String username,String idReservation) {
         // find reservation
-        int i = 0;
+        int i;
         Reservation free = null;
 
-        for(Reservation r : this.reservations) {
-            if(r.getId() == idReservation) {
+        for(i=0; i<this.numServers; i++) {
+            if(this.reservations.get(i).getId() == idReservation) {
                 free = this.reservations.get(i);
                 break;
-            } else {
-                i++;
+            }
+        }
+
+        // if on spot reservation delete user bid 
+        if(free.getType() == ReservationType.SPOT) {
+            for(Bid b : bids) {
+                if(b.getClient().equals(username)) {
+                    bids.remove(b);
+                    break;
+                }
+            }
+        }
+
+        // free server
+        this.reservations.set(i, null);
+
+        // reserve server for highest bid
+        Iterator<Bid> it = bids.descendingIterator();
+        while (it.hasNext()) {
+            Bid b = it.next();
+            if(b.getIdReservation() == null) {
+                String clientUsername = b.getClient();
+                float preco = b.getValue();
+                b.idReservation = "something"; // TODO: gerar id de reservações
+                this.reservations.set(i, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
+                break;
             }
         }
 
@@ -91,48 +115,11 @@ public class ServerProduct {
         long newTimestamp = System.currentTimeMillis();
         long timeElapsed = newTimestamp - free.getTimestamp();
         float toCharge = (timeElapsed / millisecondsInHour) * free.getPrice();
-        Bill bill = new Bill(username, toCharge);
-
-        if(free.getType() == ReservationType.ON_DEMAND) {
-            //free server
-            free = null;
-            for(Bid b : bids) {
-                if(b.getIdReservation() != null) {
-                    String clientUsername = b.getClient();
-                    float preco = b.getValue();
-                    this.reservations.set(i, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
-                    break;
-                }
-            }
-        } else {
-            // Type == spot
-            // free server
-            free = null;
-
-            // delete user bid 
-            // Esta parte pode estar dentro do outro ciclo;
-            for(Bid b : bids) {
-                if(b.getClient().equals(username)) {
-                    bids.remove(b);
-                    break;
-                }
-            }
-
-            // reserve server for highest bid
-            for(Bid b : bids) {
-                if(b.getIdReservation() != null) {
-                    String clientUsername = b.getClient();
-                    float preco = b.getValue();
-                    this.reservations.set(i, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
-                    break;
-                }
-            }
-        }
-        return bill;
+        return new Bill(username, toCharge);
     }
 
     // on demand reservation
-    public Bill makeOnDemandReservation(String clientUsername) {
+    public synchronized Bill makeOnDemandReservation(String clientUsername) {
         // find reservation with lowest bid or the first empty reservation spot
         int emptyIndex = -1;
         Reservation lowestBid = null;
@@ -175,6 +162,12 @@ public class ServerProduct {
             float toCharge = (timeElapsed / millisecondsInHour) * lowestBid.getPrice();
 
             // replace reservation
+            Bid toCompare = new Bid(lowestBid.getClient(), 0.0f, lowestBid.getId());
+            for (Bid b : this.bids) {
+                if (b.equals(toCompare)) {
+                    b.idReservation = null;
+                }
+            }
             this.reservations.set(minIndex, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
 
             // bill old client
@@ -189,13 +182,14 @@ public class ServerProduct {
 
     // o que acontece quando o leilão recebe uma oferta
     // returns bill to charge old client, or null
-    public Bill makeBid(String clientUsername, float price) throws IOException {
+    public synchronized Bill makeBid(String clientUsername, float price) throws IOException {
 
         // if bid < minimum price then do nothing
         if (price < this.minBidPrice) return null;
 
         // add new bid or update client's bid
-        this.bids.add(new Bid(clientUsername, price, null));
+        Bid newBid = new Bid(clientUsername, price, null);
+        this.bids.add(newBid);
 
         // find reservation with lowest bid or the first empty reservation spot
         int emptyIndex = -1;
@@ -225,6 +219,7 @@ public class ServerProduct {
         // if there is empty reservation
         if (emptyIndex != -1) {
             // create reservation
+            newBid.idReservation = "something";
             this.reservations.set(emptyIndex, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
 
             // no bill to charge
@@ -240,6 +235,7 @@ public class ServerProduct {
             float toCharge = (timeElapsed / millisecondsInHour) * lowestBid.getPrice();
 
             // replace reservation
+            newBid.idReservation = "something";
             this.reservations.set(minIndex, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
 
             // bill old client
