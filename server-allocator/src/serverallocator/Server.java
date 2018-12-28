@@ -3,8 +3,7 @@ package serverallocator;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 public class Server {
 
@@ -124,15 +123,15 @@ public class Server {
 
     // Método para alugar servidores
     public void rentServer(String id, String username) {
-        ServerProduct auctionServer;
+        ServerProduct rentServer;
         try {
             this.serversLock.readLock();
-            auctionServer = this.servers.get(id);
+            rentServer = this.servers.get(id);
         } finally {
             this.serversLock.readUnlock();
         }
 
-        if(auctionServer != null) {
+        if(rentServer != null) {
             Bill conta = rentServer.makeOnDemandReservation(username);
             User user;
             
@@ -165,14 +164,26 @@ public class Server {
         ServerProduct freeServer;
         try {
             this.serversLock.readLock();
-            freeServer = this.servers.get(id);
+            freeServer = this.servers.get(serverID);
         } finally {
             this.serversLock.readUnlock();
         }
 
         if(freeServer != null && userExists) {
-            ServerProduct freeServer = this.servers.get(serverID);
             Bill conta = freeServer.freeReservation(username,idReservation);
+            User user;
+            if(conta != null) {
+                try {
+                    this.usersLock.readLock();
+                    user = this.users.get(conta.getClient());
+                } finally {
+                    this.usersLock.readUnlock();
+                }
+                float balance = user.getBalance() + conta.getValue();
+                user.setBalance(balance);
+            } else {
+                System.out.println("Servidor não foi libertado");
+            }
         } else {
             System.out.println("Servidor ou cliente não existem.");
         }
@@ -180,10 +191,9 @@ public class Server {
 
     // retorna lista de servidores fixos
     public ArrayList<ServerProduct> getListOfFixedServers() {
-
         ArrayList<ServerProduct> list = new ArrayList<>();
 
-        Collection<String> values;
+        Collection<ServerProduct> values;
         try {
             this.serversLock.readLock();
             values = this.servers.values();
@@ -192,23 +202,16 @@ public class Server {
         }
 
         for (ServerProduct sp : values) {
-
-            //if (sp.getStatus() == 0 && sp.getType().equals("fixed")) {
-
                 list.add(sp);
-            //}
         }
-
         return list;
-
     }
 
     // retorna lista de servidores a leilao
     public ArrayList<ServerProduct> getListOfAuctionServers() {
-
         ArrayList<ServerProduct> list = new ArrayList<>();
 
-        Collection<String> values;
+        Collection<ServerProduct> values;
         try {
             this.serversLock.readLock();
             values = this.servers.values();
@@ -217,15 +220,9 @@ public class Server {
         }
 
         for (ServerProduct sp : values) {
-
-            //if (sp.getStatus() == 0 && sp.getType().equals("auction")) {
-
                 list.add(sp);
-            //}
         }
-
         return list;
-
     }
 
     // retorna utilizador
