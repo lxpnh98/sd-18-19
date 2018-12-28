@@ -19,6 +19,10 @@ public class Reservation {
         return this.client;
     }
 
+    public String getId() {
+        return this.id;
+    }
+
     public ReservationType getType() {
         return this.type;
     }

@@ -6,10 +6,24 @@ import java.io.*;
 class Bid {
     String client;
     float value;
+    String idReservation;
 
-    Bid(String c, float v) {
+    Bid(String c, float v, String idReservation) {
         this.client = c;
         this.value = v;
+        this.idReservation = idReservation;
+    }
+
+    public String getClient() {
+        return this.client;
+    }
+
+    public float getValue() {
+        return this.value;
+    }
+
+    public String getIdReservation() {
+        return this.idReservation;
     }
 
     // bid identified by name of client
@@ -60,7 +74,61 @@ public class ServerProduct {
 
     // free reservation (both on demand and spot reservations)
     public Bill freeReservation(String username,String idReservation) {
-        return null;
+        // find reservation
+        int i = 0;
+        Reservation free = null;
+
+        for(Reservation r : this.reservations) {
+            if(r.getId() == idReservation) {
+                free = this.reservations.get(i);
+                break;
+            } else {
+                i++;
+            }
+        }
+
+        // charge user
+        long newTimestamp = System.currentTimeMillis();
+        long timeElapsed = newTimestamp - free.getTimestamp();
+        float toCharge = (timeElapsed / millisecondsInHour) * free.getPrice();
+        Bill bill = new Bill(username, toCharge);
+
+        if(free.getType() == ReservationType.ON_DEMAND) {
+            //free server
+            free = null;
+            for(Bid b : bids) {
+                if(b.getIdReservation() != null) {
+                    String clientUsername = b.getClient();
+                    float preco = b.getValue();
+                    this.reservations.set(i, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
+                    break;
+                }
+            }
+        } else {
+            // Type == spot
+            // free server
+            free = null;
+
+            // delete user bid 
+            // Esta parte pode estar dentro do outro ciclo;
+            for(Bid b : bids) {
+                if(b.getClient().equals(username)) {
+                    bids.remove(b);
+                    break;
+                }
+            }
+
+            // reserve server for highest bid
+            for(Bid b : bids) {
+                if(b.getIdReservation() != null) {
+                    String clientUsername = b.getClient();
+                    float preco = b.getValue();
+                    this.reservations.set(i, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
+                    break;
+                }
+            }
+        }
+        return bill;
     }
 
     // on demand reservation
@@ -127,7 +195,7 @@ public class ServerProduct {
         if (price < this.minBidPrice) return null;
 
         // add new bid or update client's bid
-        this.bids.add(new Bid(clientUsername, price));
+        this.bids.add(new Bid(clientUsername, price, null));
 
         // find reservation with lowest bid or the first empty reservation spot
         int emptyIndex = -1;
