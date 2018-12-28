@@ -99,43 +99,61 @@ public class Server {
             ServerProduct auctionServer = servers.get(id);
             Bill conta = auctionServer.makeBid(username, Float.parseFloat(money));
             User user;
-
-            try {
-                this.usersLock.readLock();
-                user = this.users.get(conta.getClient());
-            } finally {
-                this.usersLock.readUnlock();
+            if(conta!=null) {
+                try {
+                    this.usersLock.readLock();
+                    user = this.users.get(conta.getClient());
+                } finally {
+                    this.usersLock.readUnlock();
+                }
+                float balance = user.getBalance() + conta.getValue();
+                user.setBalance(balance);
             }
-            float balance = user.getBalance() + conta.getValue();
-            user.setBalance(balance);
         } else {
             System.out.println("Servidor não encontrado");
         }
     }
 
     // Método para alugar servidores
-    /*
     public void rentServer(String id, String username) {
         if(servers.containsKey(id)) {
             ServerProduct rentServer = servers.get(id);
             Bill conta = rentServer.makeOnDemandReservation(username);
-
-            User user = users.get(username);
-            float balance = user.getBalance() + conta.getValue();
-            user.setBalance(balance);
+            User user;
+            
+            if(conta!=null) {
+                try {
+                    this.usersLock.readLock();
+                    user = this.users.get(conta.getClient());
+                } finally {
+                    this.usersLock.readUnlock();
+                }
+                float balance = user.getBalance() + conta.getValue();
+                user.setBalance(balance);
+            }
         } else {
             System.out.println("Servidor não encontrado");
         }
     }
-    */
 
 
 	// Método para libertar o servidor
-    /*
-    public void freeServer(String serverID, string username) {
-            
+    public void freeServer(String serverID, String username, String idReservation) {
+        boolean userExists; 
+        try {
+            this.usersLock.readLock();
+            userExists = this.users.containsKey(username);
+        } finally {
+            this.usersLock.readUnlock();
+        }
+        if(servers.containsKey(serverID) && userExists) {
+            ServerProduct freeServer = servers.get(serverID);
+            Bill conta = freeServer.freeReservation(username,idReservation);
+
+        } else {
+            System.out.println("Servidor ou cliente não existem.");
+        }
     }
-    */
 
     // retorna lista de servidores fixos
     public ArrayList<ServerProduct> getListOfFixedServers() {

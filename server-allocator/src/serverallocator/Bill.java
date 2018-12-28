@@ -10,7 +10,7 @@ public class Bill {
     }
 
     public String getClient() {
-        return this.client;
+    	return this.client;
     }
 
     public float getValue() {
