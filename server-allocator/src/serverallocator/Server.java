@@ -12,14 +12,15 @@ public class Server {
     private int port;
     private HashMap<String, User> users;
     private RWLock usersLock;
-
     private HashMap<String, ServerProduct> servers;
+    private RWLock serversLock;
 
     public Server(int port) {
         this.port = port;
         this.users = new HashMap<>();
         this.usersLock = new RWLock();
         this.servers = new HashMap<>();
+        this.serversLock = new RWLock();
     }
 
     public void startServer() {
@@ -95,8 +96,15 @@ public class Server {
 
     // Método para fazer uma bid para um servidor de leilão
     public void bidAuctionServer(String id, String username, String money) throws IOException {
-        if(servers.containsKey(id)) {
-            ServerProduct auctionServer = servers.get(id);
+        ServerProduct auctionServer;
+        try {
+            this.serversLock.readLock();
+            auctionServer = this.servers.get(id);
+        } finally {
+            this.serversLock.readUnlock();
+        }
+
+        if(auctionServer != null) {
             Bill conta = auctionServer.makeBid(username, Float.parseFloat(money));
             User user;
             if(conta!=null) {
@@ -116,8 +124,15 @@ public class Server {
 
     // Método para alugar servidores
     public void rentServer(String id, String username) {
-        if(servers.containsKey(id)) {
-            ServerProduct rentServer = servers.get(id);
+        ServerProduct auctionServer;
+        try {
+            this.serversLock.readLock();
+            auctionServer = this.servers.get(id);
+        } finally {
+            this.serversLock.readUnlock();
+        }
+
+        if(auctionServer != null) {
             Bill conta = rentServer.makeOnDemandReservation(username);
             User user;
             
@@ -146,10 +161,18 @@ public class Server {
         } finally {
             this.usersLock.readUnlock();
         }
-        if(servers.containsKey(serverID) && userExists) {
-            ServerProduct freeServer = servers.get(serverID);
-            Bill conta = freeServer.freeReservation(username,idReservation);
 
+        ServerProduct freeServer;
+        try {
+            this.serversLock.readLock();
+            freeServer = this.servers.get(id);
+        } finally {
+            this.serversLock.readUnlock();
+        }
+
+        if(freeServer != null && userExists) {
+            ServerProduct freeServer = this.servers.get(serverID);
+            Bill conta = freeServer.freeReservation(username,idReservation);
         } else {
             System.out.println("Servidor ou cliente não existem.");
         }
@@ -160,7 +183,15 @@ public class Server {
 
         ArrayList<ServerProduct> list = new ArrayList<>();
 
-        for (ServerProduct sp : servers.values()) {
+        Collection<String> values;
+        try {
+            this.serversLock.readLock();
+            values = this.servers.values();
+        } finally {
+            this.serversLock.readUnlock();
+        }
+
+        for (ServerProduct sp : values) {
 
             //if (sp.getStatus() == 0 && sp.getType().equals("fixed")) {
 
@@ -177,7 +208,15 @@ public class Server {
 
         ArrayList<ServerProduct> list = new ArrayList<>();
 
-        for (ServerProduct sp : servers.values()) {
+        Collection<String> values;
+        try {
+            this.serversLock.readLock();
+            values = this.servers.values();
+        } finally {
+            this.serversLock.readUnlock();
+        }
+
+        for (ServerProduct sp : values) {
 
             //if (sp.getStatus() == 0 && sp.getType().equals("auction")) {
 
@@ -202,7 +241,12 @@ public class Server {
     // cria servidor
     private void createServer(String id, int numServers, float price, float minBidPrice) {
         ServerProduct sp = new ServerProduct(id, numServers, price, minBidPrice);
-        this.servers.put(id, sp);
+        try {
+            this.serversLock.writeLock();
+            this.servers.put(id, sp);
+        } finally {
+            this.serversLock.writeUnlock();
+        }
     }
 
     private void createTestServers() throws IOException {
