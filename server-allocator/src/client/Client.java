@@ -256,13 +256,11 @@ public class Client implements Runnable {
                 }
 
                 break;
-
         }
     }
 
     // envia mensagem para o servidor
     private void sendMessage(String message) throws IOException {
-
         serverOut.write(message);
         serverOut.newLine();
         serverOut.flush();
@@ -277,7 +275,6 @@ public class Client implements Runnable {
         String query = String.join(" ", "LOGIN", username, password);
 
         this.sendMessage(query);
-
     }
 
     // envia string para o servidor no formato: REGISTER username password
@@ -289,7 +286,6 @@ public class Client implements Runnable {
         String query = String.join(" ", "REGISTER", username, password);
 
         this.sendMessage(query);
-
     }
 
     public static void main(String[] args) {
@@ -298,6 +294,5 @@ public class Client implements Runnable {
 
         // start client
         c.startClient();
-
     }
 }

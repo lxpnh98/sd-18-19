@@ -98,13 +98,7 @@ public class Server {
         }
     }
 
-    // TODO: método para libertar servidor
-    public void freeServer(String serverID) {
-
-    }
-
     // Método para alugar servidores
-    // Ainda
     /*
     public void rentServer(String id, String username) {
         if(servers.containsKey(id)) {
@@ -117,6 +111,14 @@ public class Server {
         } else {
             System.out.println("Servidor não encontrado");
         }
+    }
+    */
+
+
+	// Método para libertar o servidor
+    /*
+    public void freeServer(String serverID, string username) {
+            
     }
     */
 
@@ -156,21 +158,16 @@ public class Server {
 
     // retorna utilizador
     public User getUser(String username) {
-
         return this.users.get(username);
     }
 
     // cria servidor
     private void createServer(String id, int numServers, float price, float minBidPrice) {
-
         ServerProduct sp = new ServerProduct(id, numServers, price, minBidPrice);
-
         this.servers.put(id, sp);
-
     }
 
     private void createTestServers() throws IOException {
-
         // creating test servers
         this.createServer("f1.micro", 5, 20, 2);
         this.createServer("f2.micro", 5, 20, 2);
@@ -202,17 +199,12 @@ public class Server {
         this.createServer("a3.large", 5, 70, 2);
         this.createServer("a4.large", 5, 70, 2);
         this.createServer("a5.large", 5, 70, 2);
-
     }
 
     public static void main(String[] args) {
-
         Server s = new Server(12345);
 
         // start server
         s.startServer();
-
     }
-
-
 }
