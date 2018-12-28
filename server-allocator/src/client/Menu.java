@@ -48,23 +48,23 @@ public class Menu {
                     System.out.println("* " + data.get(i) + " " + data.get(i+1) + " *");
                 }
 
-                System.out.println("\n* 1 - Reservar servidor             *" +
-                                   "\n* 0 - Voltar                        *" +
-                                   "\n*************************************");
+                System.out.println("\n* 1 - Selecionar servidor a reservar *" +
+                                   "\n* 0 - Voltar                         *" +
+                                   "\n**************************************");
 
                 break;
 
             case 4:
-                System.out.println("*** SERVIDORES PARA ALUGAR ***");
+                System.out.println("*** SERVIDORES A LEILÃO ***");
 
                 for (int i = 0; i < data.size(); i+=2) {
 
                     System.out.println("* " + data.get(i) + " " + data.get(i+1) + " *");
                 }
 
-                System.out.println("\n* 1 - Fazer licitação               *" +
-                                   "\n* 0 - Voltar                        *" +
-                                   "\n*************************************");
+                System.out.println("\n* 1 - selecionar servidor para licitação *" +
+                                   "\n* 0 - Voltar                             *" +
+                                   "\n******************************************");
 
                 break;
 
