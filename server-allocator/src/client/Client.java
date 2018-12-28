@@ -143,15 +143,15 @@ public class Client implements Runnable {
 
             case "RESERVAFIXO":
 
-            	System.out.println("Server Reservado");
+            	System.out.println("\nServer Reservado\n");
             	this.menu.changeState(1);
             	this.menu.show();
 
             	break;
 
             case "LICITACAO":
-
-            	System.out.println("Licitação feita");
+            
+            	System.out.println("\nLicitação feita\n");
             	this.menu.changeState(1);
             	this.menu.show();
 
