@@ -125,6 +125,13 @@ public class Server {
             ServerProduct freeServer = servers.get(serverID);
             Bill conta = freeServer.freeReservation(username,idReservation);
 
+            if(conta != null) {
+                User user = users.get(username);
+                float balance = user.getBalance() + conta.getValue();
+                user.setBalance(balance);
+            } else {
+                System.out.println("Servidor não foi libertado");
+            }
         } else {
             System.out.println("Servidor ou cliente não existem.");
         }
@@ -132,36 +139,22 @@ public class Server {
 
     // retorna lista de servidores fixos
     public ArrayList<ServerProduct> getListOfFixedServers() {
-
         ArrayList<ServerProduct> list = new ArrayList<>();
 
         for (ServerProduct sp : servers.values()) {
-
-            //if (sp.getStatus() == 0 && sp.getType().equals("fixed")) {
-
                 list.add(sp);
-            //}
         }
-
         return list;
-
     }
 
     // retorna lista de servidores a leilao
     public ArrayList<ServerProduct> getListOfAuctionServers() {
-
         ArrayList<ServerProduct> list = new ArrayList<>();
 
         for (ServerProduct sp : servers.values()) {
-
-            //if (sp.getStatus() == 0 && sp.getType().equals("auction")) {
-
                 list.add(sp);
-            //}
         }
-
         return list;
-
     }
 
     // retorna utilizador
