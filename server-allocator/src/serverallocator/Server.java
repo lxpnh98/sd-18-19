@@ -54,20 +54,13 @@ public class Server {
 
     // MÉTODO LOGIN
     public boolean login(String username, String password) {
-        try {
-            this.usersLock.readLock();
-            if (!this.users.containsKey(username)) {
-                return false;
-            }
-
-            if (this.users.get(username).getPassword().equals(password)) {
-                this.users.get(username).setLoggedIn(true);
-                return true;
-            }
-            return false;
-        } finally {
-            this.usersLock.readUnlock();
+        User u = this.getUser(username);
+        if (u == null) return false;
+        if (u.getPassword().equals(password)) {
+            u.setLoggedIn(true);
+            return true;
         }
+        return false;
     }
 
     // MÉTODO REGISTO
@@ -107,12 +100,7 @@ public class Server {
             Bill conta = auctionServer.makeBid(username, Float.parseFloat(money));
             User user;
             if(conta!=null) {
-                try {
-                    this.usersLock.readLock();
-                    user = this.users.get(conta.getClient());
-                } finally {
-                    this.usersLock.readUnlock();
-                }
+                user = this.getUser(conta.getClient());
                 float balance = user.getBalance() + conta.getValue();
                 user.setBalance(balance);
             }
@@ -136,12 +124,7 @@ public class Server {
             User user;
             
             if(conta!=null) {
-                try {
-                    this.usersLock.readLock();
-                    user = this.users.get(conta.getClient());
-                } finally {
-                    this.usersLock.readUnlock();
-                }
+                user = this.getUser(conta.getClient());
                 float balance = user.getBalance() + conta.getValue();
                 user.setBalance(balance);
             }
@@ -153,14 +136,7 @@ public class Server {
 
 	// Método para libertar o servidor
     public void freeServer(String serverID, String username, String idReservation) {
-        boolean userExists; 
-        try {
-            this.usersLock.readLock();
-            userExists = this.users.containsKey(username);
-        } finally {
-            this.usersLock.readUnlock();
-        }
-
+        User user = this.getUser(username);
         ServerProduct freeServer;
         try {
             this.serversLock.readLock();
@@ -169,17 +145,12 @@ public class Server {
             this.serversLock.readUnlock();
         }
 
-        if(freeServer != null && userExists) {
+        if(freeServer != null && user != null) {
             Bill conta = freeServer.freeReservation(username,idReservation);
-            User user;
+            User oldUser;
             if(conta != null) {
-                try {
-                    this.usersLock.readLock();
-                    user = this.users.get(conta.getClient());
-                } finally {
-                    this.usersLock.readUnlock();
-                }
-                float balance = user.getBalance() + conta.getValue();
+                oldUser = this.getUser(conta.getClient());
+                float balance = oldUser.getBalance() + conta.getValue();
                 user.setBalance(balance);
             } else {
                 System.out.println("Servidor não foi libertado");
