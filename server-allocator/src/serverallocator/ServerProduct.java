@@ -59,7 +59,7 @@ public class ServerProduct {
     }
 
     // free reservation (both on demand and spot reservations)
-    public Bill freeReservation(String username,String idReservation) {
+    public Bill freeReservation(String username, String idReservation) {
         return null;
     }
 
