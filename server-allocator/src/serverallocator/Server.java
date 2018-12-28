@@ -90,37 +90,45 @@ public class Server {
             ServerProduct auctionServer = servers.get(id);
             Bill conta = auctionServer.makeBid(username, Float.parseFloat(money));
 
-            User user = users.get(username);
-            float balance = user.getBalance() + conta.getValue();
-            user.setBalance(balance);
+            if(conta!=null) {
+                String cobrado = conta.getClient();
+                User user = users.get(cobrado);
+                float balance = user.getBalance() + conta.getValue();
+                user.setBalance(balance);
+            }
         } else {
             System.out.println("Servidor não encontrado");
         }
     }
 
     // Método para alugar servidores
-    /*
     public void rentServer(String id, String username) {
         if(servers.containsKey(id)) {
             ServerProduct rentServer = servers.get(id);
             Bill conta = rentServer.makeOnDemandReservation(username);
-
-            User user = users.get(username);
-            float balance = user.getBalance() + conta.getValue();
-            user.setBalance(balance);
+            
+            if(conta!=null) {
+                String cobrado = conta.getClient();
+                User user = users.get(cobrado);
+                float balance = user.getBalance() + conta.getValue();
+                user.setBalance(balance);
+            }
         } else {
             System.out.println("Servidor não encontrado");
         }
     }
-    */
 
 
 	// Método para libertar o servidor
-    /*
-    public void freeServer(String serverID, string username) {
-            
+    public void freeServer(String serverID, String username, String idReservation) {
+        if(servers.containsKey(serverID) && users.containsKey(username)) {
+            ServerProduct freeServer = servers.get(serverID);
+            Bill conta = freeServer.freeReservation(username,idReservation);
+
+        } else {
+            System.out.println("Servidor ou cliente não existem.");
+        }
     }
-    */
 
     // retorna lista de servidores fixos
     public ArrayList<ServerProduct> getListOfFixedServers() {

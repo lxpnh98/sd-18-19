@@ -9,6 +9,10 @@ public class Bill {
         this.value = value;
     }
 
+    public String getClient() {
+    	return this.client;
+    }
+
     public float getValue() {
     	return this.value;
     }
