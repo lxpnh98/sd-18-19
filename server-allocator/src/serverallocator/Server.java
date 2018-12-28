@@ -10,13 +10,15 @@ public class Server {
 
     private ServerSocket svSocket;
     private int port;
-
     private HashMap<String, User> users;
+    private RWLock usersLock;
+
     private HashMap<String, ServerProduct> servers;
 
     public Server(int port) {
         this.port = port;
         this.users = new HashMap<>();
+        this.usersLock = new RWLock();
         this.servers = new HashMap<>();
     }
 
@@ -51,33 +53,40 @@ public class Server {
     }
 
     // MÉTODO LOGIN
-    // evitar logins tbm ao mesmo tempo? neste caso verificar a flag loggedIn
     public boolean login(String username, String password) {
-        if (!this.users.containsKey(username)) {
+        try {
+            this.usersLock.readLock();
+            if (!this.users.containsKey(username)) {
+                return false;
+            }
+
+            if (this.users.get(username).getPassword().equals(password)) {
+                this.users.get(username).setLoggedIn(true);
+                return true;
+            }
             return false;
+        } finally {
+            this.usersLock.readUnlock();
         }
-
-        if (this.users.get(username).getPassword().equals(password)) {
-            this.users.get(username).setLoggedIn(true);
-            return true;
-        }
-
-        return false;
     }
 
     // MÉTODO REGISTO
-    // evitar registos ao mesmo tempo :P
-    public synchronized boolean register(String username, String password) {
+    public boolean register(String username, String password) {
 
-        if (!this.users.containsKey(username)) {
+        try {
+            this.usersLock.writeLock();
+            if (!this.users.containsKey(username)) {
 
-            User newUser = new User(username, password);
-            this.users.put(username, newUser);
+                User newUser = new User(username, password);
+                this.users.put(username, newUser);
 
-            return true;
+                return true;
+            }
+
+            return false;
+        } finally {
+            this.usersLock.writeUnlock();
         }
-
-        return false;
 
     }
 
@@ -89,8 +98,14 @@ public class Server {
         if(servers.containsKey(id)) {
             ServerProduct auctionServer = servers.get(id);
             Bill conta = auctionServer.makeBid(username, Float.parseFloat(money));
+            User user;
 
-            User user = users.get(username);
+            try {
+                this.usersLock.readLock();
+                user = this.users.get(conta.getClient());
+            } finally {
+                this.usersLock.readUnlock();
+            }
             float balance = user.getBalance() + conta.getValue();
             user.setBalance(balance);
         } else {
@@ -158,7 +173,12 @@ public class Server {
 
     // retorna utilizador
     public User getUser(String username) {
-        return this.users.get(username);
+        try {
+            this.usersLock.readLock();
+            return this.users.get(username);
+        } finally {
+            this.usersLock.readUnlock();
+        }
     }
 
     // cria servidor
