@@ -140,6 +140,22 @@ public class Client implements Runnable {
             	this.menu.show();
 
                 break;
+
+            case "RESERVAFIXO":
+
+            	System.out.println("Server Reservado");
+            	this.menu.changeState(1);
+            	this.menu.show();
+
+            	break;
+
+            case "LICITACAO":
+
+            	System.out.println("Licitação feita");
+            	this.menu.changeState(1);
+            	this.menu.show();
+
+            	break;
         }
 
     }
@@ -236,8 +252,10 @@ public class Client implements Runnable {
                 break;
             case 3:
                 if (choice == 1) {
-                    menu.changeState(3);
-                    this.menu.show();
+                	String username = menu.readStringFromUser("Username: ");
+                    String id = menu.readStringFromUser("Server a reservar: ");
+                    String query = String.join(" ", "RESERVAFIXO", username, id);
+                    this.sendMessage(query);
                 }
             	if (choice == 0) {
                     menu.changeState(1);
@@ -247,8 +265,11 @@ public class Client implements Runnable {
                 break;
             case 4:
             	if (choice == 1) {
-                    menu.changeState(4);
-                    this.menu.show();
+            		String username = menu.readStringFromUser("Username: ");
+                    String id = menu.readStringFromUser("Server a reservar: ");
+                    String money = menu.readStringFromUser("Valor da licitação: ");
+                    String query = String.join(" ", "LICITACAO", username, id, money);
+                    this.sendMessage(query);
                 }
                 if (choice == 0) {
                     menu.changeState(1);

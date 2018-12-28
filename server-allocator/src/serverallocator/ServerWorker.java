@@ -92,6 +92,23 @@ public class ServerWorker implements Runnable {
                 System.out.println("Recebeu libertar servidor");
                 // TODO Libertar server
                 break;
+
+            case "RESERVAFIXO":
+
+                System.out.println("Recebeu reserva de server");
+                // TODO Reservar server fixo
+
+                this.sendMessage("RESERVAFIXO");
+                break;
+
+            case "LICITACAO":
+
+                System.out.println("Recebeu licitação");
+                // TODO Fazer licitação
+
+                this.sendMessage("LICITACAO");
+                break;
+
         }
     }
 

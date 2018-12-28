@@ -88,7 +88,7 @@ public class Server {
     public void bidAuctionServer(String id, String username, String money) throws IOException {
         if(servers.containsKey(id)) {
             ServerProduct auctionServer = servers.get(id);
-            Bill conta = auctionServer.makeBid(username, money);
+            Bill conta = auctionServer.makeBid(username, Float.parseFloat(money));
 
             User user = users.get(username);
             float balance = user.getBalance() + conta.getValue();
