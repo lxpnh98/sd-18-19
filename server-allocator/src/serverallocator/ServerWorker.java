@@ -41,7 +41,8 @@ public class ServerWorker implements Runnable {
     // em data[0] vem o ID da cena e no restante vem outras informações
     private void parseResponse (String responseFromClient) throws IOException {
 
-        String[] data = responseFromClient.split(" ", 2);
+        String[] data  = responseFromClient.split(" ", 2);
+        String[] data2 = responseFromClient.split(" ");
 
         switch (data[0]) {
 
@@ -90,23 +91,32 @@ public class ServerWorker implements Runnable {
             case "LIBERTARSV":
 
                 System.out.println("Recebeu libertar servidor");
-                // TODO Libertar server
+                int i = this.server.freeServer(data2[1], loggedinUser.getUsername(), data2[2]);
+
+                if (i == 0) this.sendMessage("LIBERTARSV");
+                if (i == 2) this.sendMessage("SERVERNAOLIBERTADO");
+                if (i == 3) this.sendMessage("NAOEXISTE");
+
                 break;
 
             case "RESERVAFIXO":
 
                 System.out.println("Recebeu reserva de server");
-                // TODO Reservar server fixo
+                int j = this.server.rentServer(data[1], loggedinUser.getUsername());
 
-                this.sendMessage("RESERVAFIXO");
+                if (j == 0) this.sendMessage("RESERVAFIXO");
+                if (j == 1) this.sendMessage("SERVERNAOENCONTRADO");
+
                 break;
 
             case "LICITACAO":
 
                 System.out.println("Recebeu licitação");
-                // TODO Fazer licitação
+                int r = this.server.bidAuctionServer(data2[1], loggedinUser.getUsername(), data2[2]);
 
-                this.sendMessage("LICITACAO");
+                if (r == 0) this.sendMessage("LICITACAO");
+                if (r == 1) this.sendMessage("SERVERNAOENCONTRADO");
+
                 break;
 
         }

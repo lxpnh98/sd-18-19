@@ -42,7 +42,7 @@ public class Client implements Runnable {
 
             case "LOGINFEITO":
 
-                System.out.println("Login Feito");
+                System.out.println("\nLogin Feito\n");
                 
                 // muda o estado do menu
                 this.menu.changeState(1);
@@ -54,7 +54,7 @@ public class Client implements Runnable {
 
             case "LOGINFALHADO" :
 
-                System.out.println("Login Falhado");
+                System.out.println("\nLogin Falhado\n");
                 
                 // muda o estado do menu
                 this.menu.changeState(0);
@@ -65,7 +65,7 @@ public class Client implements Runnable {
 
             case "REGISTOFEITO":
 
-                System.out.println("Registo Feito");
+                System.out.println("\nRegisto Feito\n");
 
                 // muda o estado do menu
                 this.menu.changeState(0);
@@ -76,7 +76,7 @@ public class Client implements Runnable {
 
             case "OVERVIEW":
 
-                System.out.println("Overview Feito");
+                System.out.println("\nOverview Feito\n");
 
                 this.menu.changeBalance(Float.parseFloat(data[1]));
 
@@ -89,7 +89,7 @@ public class Client implements Runnable {
 
             case "MANDASVFIXOS":
 
-                System.out.println("Mostrar svs fixos");
+                System.out.println("\nMostrar svs fixos\n");
 
                 ArrayList<String> array = new ArrayList<>();
 
@@ -112,7 +112,7 @@ public class Client implements Runnable {
 
             case "MANDASVLEILAO":
 
-                System.out.println("Mostrar svs leiloes");
+                System.out.println("\nMostrar svs leiloes\n");
 
                 ArrayList<String> array1 = new ArrayList<>();
 
@@ -135,7 +135,7 @@ public class Client implements Runnable {
 
             case "LIBERTARSV":
 
-            	System.out.println("Server libertado");
+            	System.out.println("\nServer libertado\n");
             	this.menu.changeState(1);
             	this.menu.show();
 
@@ -156,6 +156,31 @@ public class Client implements Runnable {
             	this.menu.show();
 
             	break;
+
+           	case "SERVERNAOENCONTRADO":
+
+           		System.out.println("\nServer não encontrado\n");
+            	this.menu.changeState(1);
+            	this.menu.show();
+
+            	break;
+
+            case "SERVERNAOLIBERTADO":
+
+           		System.out.println("\nServer não libertado\n");
+            	this.menu.changeState(1);
+            	this.menu.show();
+
+            	break;
+
+            case "NAOEXISTE":
+
+           		System.out.println("\nServidor ou cliente não existem\n");
+            	this.menu.changeState(1);
+            	this.menu.show();
+
+            	break;
+
         }
 
     }
@@ -235,7 +260,10 @@ public class Client implements Runnable {
                     this.sendMessage("RESERVARINSTANCIA");
                 }
 				if (choice == 4) {
-                    this.sendMessage("LIBERTARSV");
+					String id = menu.readStringFromUser("Server a livertar: ");
+					String idR = menu.readStringFromUser("Id de reserva: ");
+                    String query = String.join(" ", "LIBERTARSV", id, idR);
+                    this.sendMessage(query);
                 }
                 if (choice == 0) {
                 	menu.changeState(0);
@@ -252,9 +280,8 @@ public class Client implements Runnable {
                 break;
             case 3:
                 if (choice == 1) {
-                	String username = menu.readStringFromUser("Username: ");
                     String id = menu.readStringFromUser("Server a reservar: ");
-                    String query = String.join(" ", "RESERVAFIXO", username, id);
+                    String query = String.join(" ", "RESERVAFIXO", id);
                     this.sendMessage(query);
                 }
             	if (choice == 0) {
@@ -265,10 +292,9 @@ public class Client implements Runnable {
                 break;
             case 4:
             	if (choice == 1) {
-            		String username = menu.readStringFromUser("Username: ");
                     String id = menu.readStringFromUser("Server a reservar: ");
                     String money = menu.readStringFromUser("Valor da licitação: ");
-                    String query = String.join(" ", "LICITACAO", username, id, money);
+                    String query = String.join(" ", "LICITACAO", id, money);
                     this.sendMessage(query);
                 }
                 if (choice == 0) {

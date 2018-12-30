@@ -87,8 +87,9 @@ public class Server {
     // poderão ser canceladas reservas concedidas em leilão para obter o servidor pretendido.
 
     // Método para fazer uma bid para um servidor de leilão
-    public void bidAuctionServer(String id, String username, String money) throws IOException {
+    public int bidAuctionServer(String id, String username, String money) throws IOException {
         ServerProduct auctionServer;
+        int r = 0;
         try {
             this.serversLock.readLock();
             auctionServer = this.servers.get(id);
@@ -106,12 +107,15 @@ public class Server {
             }
         } else {
             System.out.println("Servidor não encontrado");
+            r = 1;
         }
+        return r;
     }
 
     // Método para alugar servidores
-    public void rentServer(String id, String username) {
+    public int rentServer(String id, String username) {
         ServerProduct rentServer;
+        int r = 0;
         try {
             this.serversLock.readLock();
             rentServer = this.servers.get(id);
@@ -130,14 +134,17 @@ public class Server {
             }
         } else {
             System.out.println("Servidor não encontrado");
+            r = 1;
         }
+        return r;
     }
 
 
 	// Método para libertar o servidor
-    public void freeServer(String serverID, String username, String idReservation) {
+    public int freeServer(String serverID, String username, String idReservation) {
         User user = this.getUser(username);
         ServerProduct freeServer;
+        int r = 0;
         try {
             this.serversLock.readLock();
             freeServer = this.servers.get(serverID);
@@ -154,10 +161,13 @@ public class Server {
                 user.setBalance(balance);
             } else {
                 System.out.println("Servidor não foi libertado");
+                r = 2;
             }
         } else {
             System.out.println("Servidor ou cliente não existem.");
+            r = 3;
         }
+        return r;
     }
 
     // retorna lista de servidores fixos

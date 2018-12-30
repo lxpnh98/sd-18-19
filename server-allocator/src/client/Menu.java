@@ -62,7 +62,7 @@ public class Menu {
                     System.out.println("* " + data.get(i) + " " + data.get(i+1) + " *");
                 }
 
-                System.out.println("\n* 1 - selecionar servidor para licitação *" +
+                System.out.println("\n* 1 - Selecionar servidor para licitação *" +
                                    "\n* 0 - Voltar                             *" +
                                    "\n******************************************");
 
