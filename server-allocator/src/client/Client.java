@@ -135,51 +135,51 @@ public class Client implements Runnable {
 
             case "LIBERTARSV":
 
-            	System.out.println("\nServer libertado\n");
-            	this.menu.changeState(1);
-            	this.menu.show();
+                System.out.println("\nServer libertado\n");
+                this.menu.changeState(1);
+                this.menu.show();
 
                 break;
 
             case "RESERVAFIXO":
 
-            	System.out.println("\nServer Reservado\n");
-            	this.menu.changeState(1);
-            	this.menu.show();
+                System.out.println("\nServer Reservado\n");
+                this.menu.changeState(1);
+                this.menu.show();
 
-            	break;
+                break;
 
             case "LICITACAO":
             
-            	System.out.println("\nLicitação feita\n");
-            	this.menu.changeState(1);
-            	this.menu.show();
+                System.out.println("\nLicitação feita\n");
+                this.menu.changeState(1);
+                this.menu.show();
 
-            	break;
+                break;
 
-           	case "SERVERNAOENCONTRADO":
+               case "SERVERNAOENCONTRADO":
 
-           		System.out.println("\nServer não encontrado\n");
-            	this.menu.changeState(1);
-            	this.menu.show();
+                   System.out.println("\nServer não encontrado\n");
+                this.menu.changeState(1);
+                this.menu.show();
 
-            	break;
+                break;
 
             case "SERVERNAOLIBERTADO":
 
-           		System.out.println("\nServer não libertado\n");
-            	this.menu.changeState(1);
-            	this.menu.show();
+                   System.out.println("\nServer não libertado\n");
+                this.menu.changeState(1);
+                this.menu.show();
 
-            	break;
+                break;
 
             case "NAOEXISTE":
 
-           		System.out.println("\nServidor ou cliente não existem\n");
-            	this.menu.changeState(1);
-            	this.menu.show();
+                   System.out.println("\nServidor ou cliente não existem\n");
+                this.menu.changeState(1);
+                this.menu.show();
 
-            	break;
+                break;
 
         }
 
@@ -259,14 +259,14 @@ public class Client implements Runnable {
                 if (choice == 3) {
                     this.sendMessage("RESERVARINSTANCIA");
                 }
-				if (choice == 4) {
-					String id = menu.readStringFromUser("Server a livertar: ");
-					String idR = menu.readStringFromUser("Id de reserva: ");
+                if (choice == 4) {
+                    String id = menu.readStringFromUser("Server a livertar: ");
+                    String idR = menu.readStringFromUser("Id de reserva: ");
                     String query = String.join(" ", "LIBERTARSV", id, idR);
                     this.sendMessage(query);
                 }
                 if (choice == 0) {
-                	menu.changeState(0);
+                    menu.changeState(0);
                     this.menu.show();
                 }
 
@@ -284,14 +284,14 @@ public class Client implements Runnable {
                     String query = String.join(" ", "RESERVAFIXO", id);
                     this.sendMessage(query);
                 }
-            	if (choice == 0) {
+                if (choice == 0) {
                     menu.changeState(1);
                     this.menu.show();
                 }
 
                 break;
             case 4:
-            	if (choice == 1) {
+                if (choice == 1) {
                     String id = menu.readStringFromUser("Server a reservar: ");
                     String money = menu.readStringFromUser("Valor da licitação: ");
                     String query = String.join(" ", "LICITACAO", id, money);
