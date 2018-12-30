@@ -34,4 +34,12 @@ public class Reservation {
     public long getTimestamp() {
         return this.timestamp;
     }
+
+    public String toString() {
+        return "{ client: "+this.client+
+                   ", id: "+this.id+
+                 ", type: "+this.type.name()+
+                ", price: "+this.price+
+            ", timestamp: "+this.timestamp+" }";
+    }
 }

@@ -74,12 +74,14 @@ public class ServerProduct {
 
     // free reservation (both on demand and spot reservations)
     public synchronized Bill freeReservation(String username, String idReservation) {
+
         // find reservation
         int i;
         Reservation free = null;
 
         for(i=0; i<this.numServers; i++) {
-            if (this.reservations[i] != null && this.reservations[i].getId().equals(idReservation)) {
+            if (this.reservations[i] != null && this.reservations[i].getClient().equals(username)
+                                             && this.reservations[i].getId().equals(idReservation)) {
                 free = this.reservations[i];
                 break;
             }
@@ -109,9 +111,9 @@ public class ServerProduct {
             Bid b = it.next();
             if(b.getIdReservation() == null) {
                 String clientUsername = b.getClient();
-                float preco = b.getValue();
+                float bidValue = b.getValue();
                 b.idReservation = "something"; // TODO: gerar id de reservações
-                this.reservations[i] = new Reservation(clientUsername, "something", ReservationType.SPOT, price);
+                this.reservations[i] = new Reservation(clientUsername, "something", ReservationType.SPOT, bidValue);
                 break;
             }
         }
@@ -125,6 +127,7 @@ public class ServerProduct {
 
     // on demand reservation
     public synchronized Bill makeOnDemandReservation(String clientUsername) {
+
         // find reservation with lowest bid or the first empty reservation spot
         int emptyIndex = -1;
         Reservation lowestBid = null;
@@ -173,7 +176,7 @@ public class ServerProduct {
                     b.idReservation = null;
                 }
             }
-            this.reservations[minIndex] = new Reservation(clientUsername, "something", ReservationType.SPOT, price);
+            this.reservations[minIndex] = new Reservation(clientUsername, "something", ReservationType.ON_DEMAND, price);
 
             // bill old client
             return new Bill(lowestBid.getClient(), toCharge);
@@ -250,5 +253,10 @@ public class ServerProduct {
 
         // if bid is not high enough, no reservation is replaced, and no bill charged
         return null;
+    }
+
+    public void printReservations() {
+        for (int i=0; i<this.numServers; i++)
+            System.out.println(""+i+": "+this.reservations[i]);
     }
 }

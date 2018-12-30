@@ -99,6 +99,7 @@ public class Server {
 
         if(auctionServer != null) {
             Bill conta = auctionServer.makeBid(username, Float.parseFloat(money));
+            auctionServer.printReservations();
             User user;
             if(conta!=null) {
                 user = this.getUser(conta.getClient());
@@ -125,6 +126,7 @@ public class Server {
 
         if(rentServer != null) {
             Bill conta = rentServer.makeOnDemandReservation(username);
+            rentServer.printReservations();
             User user;
             
             if(conta!=null) {
@@ -154,6 +156,7 @@ public class Server {
 
         if(freeServer != null && user != null) {
             Bill conta = freeServer.freeReservation(username,idReservation);
+            freeServer.printReservations();
             User oldUser;
             if(conta != null) {
                 oldUser = this.getUser(conta.getClient());
