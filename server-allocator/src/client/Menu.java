@@ -36,7 +36,7 @@ public class Menu {
             case 2:
                 System.out.println("*** WELCOME ***\n" +
                         "* 1 - Balance: " + this.balance + " *\n" +
-                        "* 0 - Logout                        *\n" +
+                        "* 0 - Voltar                        *\n" +
                         "*************************************\n");
                 break;
 

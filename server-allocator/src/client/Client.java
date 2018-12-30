@@ -273,7 +273,7 @@ public class Client implements Runnable {
                 break;
             case 2:
                 if (choice == 0) {
-                    menu.changeState(0);
+                    menu.changeState(1);
                     this.menu.show();
                 }
 

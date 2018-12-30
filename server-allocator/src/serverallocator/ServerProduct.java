@@ -46,7 +46,7 @@ public class ServerProduct {
     private final float millisecondsInHour = 1000.0f * 3600.0f;
     private String id;
     private int numServers;
-    private List<Reservation> reservations;
+    private Reservation[] reservations;
     private TreeSet<Bid> bids;
     private float minBidPrice;
     private float price;
@@ -54,7 +54,7 @@ public class ServerProduct {
     public ServerProduct(String id, int numServers, float price, float minBidPrice) {
         this.id = id;
         this.numServers = numServers;
-        this.reservations = new ArrayList<>(numServers);        
+        this.reservations = new Reservation[numServers];        
         this.bids = new TreeSet<>(new BidComparator());
         this.price = price;
         this.minBidPrice = minBidPrice;
@@ -73,16 +73,21 @@ public class ServerProduct {
     }
 
     // free reservation (both on demand and spot reservations)
-    public synchronized Bill freeReservation(String username,String idReservation) {
+    public synchronized Bill freeReservation(String username, String idReservation) {
         // find reservation
         int i;
         Reservation free = null;
 
         for(i=0; i<this.numServers; i++) {
-            if(this.reservations.get(i).getId() == idReservation) {
-                free = this.reservations.get(i);
+            if (this.reservations[i] != null && this.reservations[i].getId().equals(idReservation)) {
+                free = this.reservations[i];
                 break;
             }
+        }
+
+        if (free == null) {
+            // Não existe reserva
+            return null;
         }
 
         // if on spot reservation delete user bid 
@@ -96,7 +101,7 @@ public class ServerProduct {
         }
 
         // free server
-        this.reservations.set(i, null);
+        this.reservations[i] = null;
 
         // reserve server for highest bid
         Iterator<Bid> it = bids.descendingIterator();
@@ -106,7 +111,7 @@ public class ServerProduct {
                 String clientUsername = b.getClient();
                 float preco = b.getValue();
                 b.idReservation = "something"; // TODO: gerar id de reservações
-                this.reservations.set(i, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
+                this.reservations[i] = new Reservation(clientUsername, "something", ReservationType.SPOT, price);
                 break;
             }
         }
@@ -125,7 +130,7 @@ public class ServerProduct {
         Reservation lowestBid = null;
         int minIndex = -1;
         for (int i=0; i<this.numServers; i++) {
-            Reservation curr = this.reservations.get(i);
+            Reservation curr = this.reservations[i];
 
             // check if empty
             if (curr == null) {
@@ -148,7 +153,7 @@ public class ServerProduct {
         // if there is empty reservation
         if (emptyIndex != -1) {
             // create reservation
-            this.reservations.set(emptyIndex, new Reservation(clientUsername, "something", ReservationType.ON_DEMAND, this.price));
+            this.reservations[emptyIndex] = new Reservation(clientUsername, "something", ReservationType.ON_DEMAND, this.price);
 
             // no bill to charge
             return null;
@@ -168,7 +173,7 @@ public class ServerProduct {
                     b.idReservation = null;
                 }
             }
-            this.reservations.set(minIndex, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
+            this.reservations[minIndex] = new Reservation(clientUsername, "something", ReservationType.SPOT, price);
 
             // bill old client
             return new Bill(lowestBid.getClient(), toCharge);
@@ -196,7 +201,7 @@ public class ServerProduct {
         Reservation lowestBid = null;
         int minIndex = -1;
         for (int i=0; i<this.numServers; i++) {
-            Reservation curr = this.reservations.get(i);
+            Reservation curr = this.reservations[i];
 
             // check if empty
             if (curr == null) {
@@ -220,7 +225,7 @@ public class ServerProduct {
         if (emptyIndex != -1) {
             // create reservation
             newBid.idReservation = "something";
-            this.reservations.set(emptyIndex, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
+            this.reservations[emptyIndex] = new Reservation(clientUsername, "something", ReservationType.SPOT, price);
 
             // no bill to charge
             return null;
@@ -236,7 +241,7 @@ public class ServerProduct {
 
             // replace reservation
             newBid.idReservation = "something";
-            this.reservations.set(minIndex, new Reservation(clientUsername, "something", ReservationType.SPOT, price));
+            this.reservations[minIndex] = new Reservation(clientUsername, "something", ReservationType.SPOT, price);
 
             // bill old client
             return new Bill(lowestBid.getClient(), toCharge);
