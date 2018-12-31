@@ -35,6 +35,12 @@ public class Reservation {
         return this.timestamp;
     }
 
+    public float getToCharge() {
+        long timeElapsed = System.currentTimeMillis() - this.timestamp;
+        float toCharge = (timeElapsed / ServerProduct.millisecondsInHour) * this.price;
+        return toCharge;
+    }
+
     public String toString() {
         return "{ client: "+this.client+
                    ", id: "+this.id+

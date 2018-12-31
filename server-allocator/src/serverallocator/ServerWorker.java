@@ -171,9 +171,9 @@ public class ServerWorker implements Runnable {
 
     private void getOverview() throws IOException {
 
-        String balance = Float.toString(this.loggedinUser.getBalance());
+        float balance = this.server.getUserBalance(this.loggedinUser.getUsername());
 
-        String query = String.join(" ", "OVERVIEW", balance);
+        String query = String.join(" ", "OVERVIEW", Float.toString(balance));
 
         this.sendMessage(query);
 

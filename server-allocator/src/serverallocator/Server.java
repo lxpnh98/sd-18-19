@@ -94,7 +94,7 @@ public class Server {
     // retorna o id da reserva caso tenha sucesso, ou null caso contrário
     public String bidAuctionServer(String id, String username, String money) throws IOException {
         ServerProduct auctionServer;
-        String idReservation = this.newReservationId();
+        String idReservation = Server.newReservationId();
         try {
             this.serversLock.readLock();
             auctionServer = this.servers.get(id);
@@ -123,7 +123,7 @@ public class Server {
     // retorna o id da reserva caso tenha sucesso, ou null caso contrário
     public String rentServer(String id, String username) {
         ServerProduct rentServer;
-        String idReservation = this.newReservationId();
+        String idReservation = Server.newReservationId();
         try {
             this.serversLock.readLock();
             rentServer = this.servers.get(id);
@@ -271,7 +271,21 @@ public class Server {
         this.createServer("a5.large", 5, 70, 2);
     }
 
-    private String newReservationId() {
+    public float getUserBalance(String username) {
+        User u = this.getUser(username);
+        if (u == null) return Float.NaN;
+        float total = 0.0f;
+        total += u.getBalance();
+        try {
+            this.serversLock.readLock();
+            total += this.servers.values().stream().mapToDouble(s -> s.getTotalUserBalance(username)).sum();
+        } finally {
+            this.serversLock.readUnlock();
+        }
+        return total;
+    }
+
+    private static String newReservationId() {
         StringBuilder r = new StringBuilder();
         (new Random()).ints(ID_LENGTH, 0, chars.length())
             .forEach(i -> r.append(chars.charAt(i)));

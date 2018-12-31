@@ -49,7 +49,7 @@ class BidComparator implements Comparator<Bid> {
 
 public class ServerProduct {
 
-    private final float millisecondsInHour = 1000.0f * 3600.0f;
+    public static final float millisecondsInHour = 1000.0f * 3600.0f;
     private String id;
     private int numServers;
     private Reservation[] reservations;
@@ -262,5 +262,16 @@ public class ServerProduct {
     public void printReservations() {
         for (int i=0; i<this.numServers; i++)
             System.out.println(""+i+": "+this.reservations[i]);
+    }
+
+    public double getTotalUserBalance(String username) {
+        double total = 0.0f;
+        for (int i=0; i<this.numServers; i++) {
+            Reservation r = this.reservations[i];
+            if (r != null && r.getClient().equals(username)) {
+                total += new Double(r.getToCharge());
+            }
+        }
+        return total;
     }
 }
