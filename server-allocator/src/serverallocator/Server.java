@@ -7,6 +7,10 @@ import java.util.*;
 
 public class Server {
 
+    static int ID_LENGTH = 10;
+    static String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+                          "abcdefghijklmnopqrstuvwxyz" +
+                          "0123456789";
     private ServerSocket svSocket;
     private int port;
     private HashMap<String, User> users;
@@ -87,9 +91,10 @@ public class Server {
     // poderão ser canceladas reservas concedidas em leilão para obter o servidor pretendido.
 
     // Método para fazer uma bid para um servidor de leilão
-    public int bidAuctionServer(String id, String username, String money) throws IOException {
+    // retorna o id da reserva caso tenha sucesso, ou null caso contrário
+    public String bidAuctionServer(String id, String username, String money) throws IOException {
         ServerProduct auctionServer;
-        int r = 0;
+        String idReservation = this.newReservationId();
         try {
             this.serversLock.readLock();
             auctionServer = this.servers.get(id);
@@ -98,7 +103,7 @@ public class Server {
         }
 
         if(auctionServer != null) {
-            Bill conta = auctionServer.makeBid(username, Float.parseFloat(money));
+            Bill conta = auctionServer.makeBid(username, Float.parseFloat(money), idReservation);
             auctionServer.printReservations();
             User user;
             if(conta!=null) {
@@ -107,16 +112,18 @@ public class Server {
                 user.setBalance(balance);
             }
         } else {
+            // servidor não encontrado
             System.out.println("Servidor não encontrado");
-            r = 1;
+            return null;
         }
-        return r;
+        return idReservation;
     }
 
     // Método para alugar servidores
-    public int rentServer(String id, String username) {
+    // retorna o id da reserva caso tenha sucesso, ou null caso contrário
+    public String rentServer(String id, String username) {
         ServerProduct rentServer;
-        int r = 0;
+        String idReservation = this.newReservationId();
         try {
             this.serversLock.readLock();
             rentServer = this.servers.get(id);
@@ -125,7 +132,7 @@ public class Server {
         }
 
         if(rentServer != null) {
-            Bill conta = rentServer.makeOnDemandReservation(username);
+            Bill conta = rentServer.makeOnDemandReservation(username, idReservation);
             rentServer.printReservations();
             User user;
             
@@ -136,9 +143,9 @@ public class Server {
             }
         } else {
             System.out.println("Servidor não encontrado");
-            r = 1;
+            return null;
         }
-        return r;
+        return idReservation;
     }
 
 
@@ -262,6 +269,13 @@ public class Server {
         this.createServer("a3.large", 5, 70, 2);
         this.createServer("a4.large", 5, 70, 2);
         this.createServer("a5.large", 5, 70, 2);
+    }
+
+    private String newReservationId() {
+        StringBuilder r = new StringBuilder();
+        (new Random()).ints(ID_LENGTH, 0, chars.length())
+            .forEach(i -> r.append(chars.charAt(i)));
+        return r.toString();
     }
 
     public static void main(String[] args) {

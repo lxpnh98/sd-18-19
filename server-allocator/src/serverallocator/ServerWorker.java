@@ -102,20 +102,20 @@ public class ServerWorker implements Runnable {
             case "RESERVAFIXO":
 
                 System.out.println("Recebeu reserva de server");
-                int j = this.server.rentServer(data[1], loggedinUser.getUsername());
+                String id = this.server.rentServer(data[1], loggedinUser.getUsername());
 
-                if (j == 0) this.sendMessage("RESERVAFIXO");
-                if (j == 1) this.sendMessage("SERVERNAOENCONTRADO");
+                if (id != null) this.sendMessage("RESERVAFIXO "+id);
+                else            this.sendMessage("SERVERNAOENCONTRADO");
 
                 break;
 
             case "LICITACAO":
 
                 System.out.println("Recebeu licitação");
-                int r = this.server.bidAuctionServer(data2[1], loggedinUser.getUsername(), data2[2]);
+                id = this.server.bidAuctionServer(data2[1], loggedinUser.getUsername(), data2[2]);
 
-                if (r == 0) this.sendMessage("LICITACAO");
-                if (r == 1) this.sendMessage("SERVERNAOENCONTRADO");
+                if (id != null) this.sendMessage("LICITACAO "+id);
+                else            this.sendMessage("SERVERNAOENCONTRADO");
 
                 break;
 

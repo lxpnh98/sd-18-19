@@ -7,11 +7,13 @@ class Bid {
     String client;
     float value;
     String idReservation;
+    boolean hasReservation;
 
-    Bid(String c, float v, String idReservation) {
+    Bid(String c, float v, String idReservation, boolean hasReservation) {
         this.client = c;
         this.value = v;
         this.idReservation = idReservation;
+        this.hasReservation = hasReservation;
     }
 
     public String getClient() {
@@ -24,6 +26,10 @@ class Bid {
 
     public String getIdReservation() {
         return this.idReservation;
+    }
+
+    public boolean hasReservation() {
+        return this.hasReservation;
     }
 
     // bid identified by name of client
@@ -95,7 +101,7 @@ public class ServerProduct {
         // if on spot reservation delete user bid 
         if(free.getType() == ReservationType.SPOT) {
             for(Bid b : bids) {
-                if(b.getClient().equals(username)) {
+                if(b.getClient().equals(username) && b.idReservation.equals(idReservation)) {
                     bids.remove(b);
                     break;
                 }
@@ -109,11 +115,12 @@ public class ServerProduct {
         Iterator<Bid> it = bids.descendingIterator();
         while (it.hasNext()) {
             Bid b = it.next();
-            if(b.getIdReservation() == null) {
+            if(b.hasReservation() == false) {
                 String clientUsername = b.getClient();
                 float bidValue = b.getValue();
-                b.idReservation = "something"; // TODO: gerar id de reservações
-                this.reservations[i] = new Reservation(clientUsername, "something", ReservationType.SPOT, bidValue);
+                String id = b.getIdReservation();
+                b.hasReservation = true;
+                this.reservations[i] = new Reservation(clientUsername, id, ReservationType.SPOT, bidValue);
                 break;
             }
         }
@@ -126,11 +133,11 @@ public class ServerProduct {
     }
 
     // on demand reservation
-    public synchronized Bill makeOnDemandReservation(String clientUsername) {
+    public synchronized Bill makeOnDemandReservation(String clientUsername, String reservationId) {
 
         // find reservation with lowest bid or the first empty reservation spot
         int emptyIndex = -1;
-        Reservation lowestBid = null;
+        Reservation lowestBidReservation = null;
         int minIndex = -1;
         for (int i=0; i<this.numServers; i++) {
             Reservation curr = this.reservations[i];
@@ -147,8 +154,8 @@ public class ServerProduct {
             }
 
             // update minimum bid
-            if (lowestBid == null || lowestBid.getPrice() > curr.getPrice()) {
-                lowestBid = curr;
+            if (lowestBidReservation == null || lowestBidReservation.getPrice() > curr.getPrice()) {
+                lowestBidReservation = curr;
                 minIndex = i;
             }
         }
@@ -156,52 +163,51 @@ public class ServerProduct {
         // if there is empty reservation
         if (emptyIndex != -1) {
             // create reservation
-            this.reservations[emptyIndex] = new Reservation(clientUsername, "something", ReservationType.ON_DEMAND, this.price);
+            this.reservations[emptyIndex] = new Reservation(clientUsername, reservationId, ReservationType.ON_DEMAND, this.price);
 
             // no bill to charge
             return null;
 
         // if there are no empty spots, replace lowest bid
-        } else if (lowestBid != null) {
+        } else if (lowestBidReservation != null) {
 
             // calculate amount to charge old client
             long newTimestamp = System.currentTimeMillis();
-            long timeElapsed = newTimestamp - lowestBid.getTimestamp();
-            float toCharge = (timeElapsed / millisecondsInHour) * lowestBid.getPrice();
+            long timeElapsed = newTimestamp - lowestBidReservation.getTimestamp();
+            float toCharge = (timeElapsed / millisecondsInHour) * lowestBidReservation.getPrice();
 
             // replace reservation
-            Bid toCompare = new Bid(lowestBid.getClient(), 0.0f, lowestBid.getId());
+            Bid toCompare = new Bid(lowestBidReservation.getClient(), 0.0f, lowestBidReservation.getId(), false);
             for (Bid b : this.bids) {
                 if (b.equals(toCompare)) {
-                    b.idReservation = null;
+                    b.hasReservation = false;
                 }
             }
-            this.reservations[minIndex] = new Reservation(clientUsername, "something", ReservationType.ON_DEMAND, price);
+            this.reservations[minIndex] = new Reservation(clientUsername, reservationId, ReservationType.ON_DEMAND, price);
 
             // bill old client
-            return new Bill(lowestBid.getClient(), toCharge);
+            return new Bill(lowestBidReservation.getClient(), toCharge);
 
         // if all reservations are on demand, reject reservation
         } else {
-            // TODO: dar sinal que rejeitou reserva
             return null;
         }
     }
 
     // o que acontece quando o leilão recebe uma oferta
     // returns bill to charge old client, or null
-    public synchronized Bill makeBid(String clientUsername, float price) throws IOException {
+    public synchronized Bill makeBid(String clientUsername, float price, String reservationId) throws IOException {
 
         // if bid < minimum price then do nothing
         if (price < this.minBidPrice) return null;
 
         // add new bid or update client's bid
-        Bid newBid = new Bid(clientUsername, price, null);
+        Bid newBid = new Bid(clientUsername, price, reservationId, false);
         this.bids.add(newBid);
 
         // find reservation with lowest bid or the first empty reservation spot
         int emptyIndex = -1;
-        Reservation lowestBid = null;
+        Reservation lowestBidReservation = null;
         int minIndex = -1;
         for (int i=0; i<this.numServers; i++) {
             Reservation curr = this.reservations[i];
@@ -218,8 +224,8 @@ public class ServerProduct {
             }
 
             // update minimum bid
-            if (lowestBid == null || lowestBid.getPrice() > curr.getPrice()) {
-                lowestBid = curr;
+            if (lowestBidReservation == null || lowestBidReservation.getPrice() > curr.getPrice()) {
+                lowestBidReservation = curr;
                 minIndex = i;
             }
         }
@@ -227,27 +233,25 @@ public class ServerProduct {
         // if there is empty reservation
         if (emptyIndex != -1) {
             // create reservation
-            newBid.idReservation = "something";
-            this.reservations[emptyIndex] = new Reservation(clientUsername, "something", ReservationType.SPOT, price);
+            this.reservations[emptyIndex] = new Reservation(clientUsername, reservationId, ReservationType.SPOT, price);
 
             // no bill to charge
             return null;
         }
 
         // if bid made is higher than lowest bid
-        if (lowestBid != null && lowestBid.getPrice() < price) {
+        if (lowestBidReservation != null && lowestBidReservation.getPrice() < price) {
 
             // calculate amount to charge old client
             long newTimestamp = System.currentTimeMillis();
-            long timeElapsed = newTimestamp - lowestBid.getTimestamp();
-            float toCharge = (timeElapsed / millisecondsInHour) * lowestBid.getPrice();
+            long timeElapsed = newTimestamp - lowestBidReservation.getTimestamp();
+            float toCharge = (timeElapsed / millisecondsInHour) * lowestBidReservation.getPrice();
 
             // replace reservation
-            newBid.idReservation = "something";
-            this.reservations[minIndex] = new Reservation(clientUsername, "something", ReservationType.SPOT, price);
+            this.reservations[minIndex] = new Reservation(clientUsername, reservationId, ReservationType.SPOT, price);
 
             // bill old client
-            return new Bill(lowestBid.getClient(), toCharge);
+            return new Bill(lowestBidReservation.getClient(), toCharge);
             
         }
 

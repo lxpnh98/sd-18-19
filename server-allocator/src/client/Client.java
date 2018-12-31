@@ -144,6 +144,7 @@ public class Client implements Runnable {
             case "RESERVAFIXO":
 
                 System.out.println("\nServer Reservado\n");
+                System.out.println("Id da reserva: "+data[1]);
                 this.menu.changeState(1);
                 this.menu.show();
 
@@ -152,14 +153,15 @@ public class Client implements Runnable {
             case "LICITACAO":
             
                 System.out.println("\nLicitação feita\n");
+                System.out.println("Id da reserva: "+data[1]);
                 this.menu.changeState(1);
                 this.menu.show();
 
                 break;
 
-               case "SERVERNAOENCONTRADO":
+            case "SERVERNAOENCONTRADO":
 
-                   System.out.println("\nServer não encontrado\n");
+                System.out.println("\nServer não encontrado\n");
                 this.menu.changeState(1);
                 this.menu.show();
 
@@ -260,7 +262,7 @@ public class Client implements Runnable {
                     this.sendMessage("RESERVARINSTANCIA");
                 }
                 if (choice == 4) {
-                    String id = menu.readStringFromUser("Server a livertar: ");
+                    String id = menu.readStringFromUser("Server a libertar: ");
                     String idR = menu.readStringFromUser("Id de reserva: ");
                     String query = String.join(" ", "LIBERTARSV", id, idR);
                     this.sendMessage(query);
