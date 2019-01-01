@@ -259,12 +259,12 @@ public class ServerProduct {
         return null;
     }
 
-    public void printReservations() {
+    public synchronized void printReservations() {
         for (int i=0; i<this.numServers; i++)
             System.out.println(""+i+": "+this.reservations[i]);
     }
 
-    public double getTotalUserBalance(String username) {
+    public synchronized double getTotalUserBalance(String username) {
         double total = 0.0f;
         for (int i=0; i<this.numServers; i++) {
             Reservation r = this.reservations[i];
