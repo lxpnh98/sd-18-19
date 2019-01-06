@@ -74,9 +74,9 @@ public class Client implements Runnable {
                 this.menu.show();
                 break;
 
-            case "OVERVIEW":
+            case "VERBALANCE":
 
-                System.out.println("\nOverview Feito\n");
+                System.out.println("\nVer balance Feito\n");
 
                 this.menu.changeBalance(Float.parseFloat(data[1]));
 
@@ -253,7 +253,7 @@ public class Client implements Runnable {
                 break;
             case 1:
                 if (choice == 1) {
-                    this.sendMessage("OVERVIEW");
+                    this.sendMessage("VERBALANCE");
                 }
                 if (choice == 2) {
                     this.sendMessage("RESERVARSV");
